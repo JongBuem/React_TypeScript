@@ -1,0 +1,126 @@
+@charset "utf-8";
+
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?j1kcra');
+  src:  url('../fonts/icomoon.eot?j1kcra#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?j1kcra') format('truetype'),
+    url('../fonts/icomoon.woff?j1kcra') format('woff'),
+    url('../fonts/icomoon.svg?j1kcra#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-add:before {
+  content: "\e900";
+}
+.icon-arrow-back:before {
+  content: "\e901";
+}
+.icon-arrow-down:before {
+  content: "\e902";
+}
+.icon-arrow-forward:before {
+  content: "\e903";
+}
+.icon-arrow-left:before {
+  content: "\e904";
+}
+.icon-arrow-right:before {
+  content: "\e905";
+}
+.icon-arrow-up:before {
+  content: "\e906";
+}
+.icon-bell:before {
+  content: "\e907";
+}
+.icon-billing-beta:before {
+  content: "\e908";
+}
+.icon-billing-ea:before {
+  content: "\e909";
+}
+.icon-bookmark:before {
+  content: "\e90a";
+}
+.icon-bookmark-add:before {
+  content: "\e90b";
+}
+.icon-categories:before {
+  content: "\e90c";
+}
+.icon-check:before {
+  content: "\e90d";
+}
+.icon-check-circle:before {
+  content: "\e90e";
+}
+.icon-close:before {
+  content: "\e90f";
+}
+.icon-close-circle:before {
+  content: "\e910";
+}
+.icon-download:before {
+  content: "\e911";
+}
+.icon-exclamation:before {
+  content: "\e912";
+}
+.icon-home:before {
+  content: "\e913";
+}
+.icon-log:before {
+  content: "\e914";
+}
+.icon-management:before {
+  content: "\e915";
+}
+.icon-monitoring:before {
+  content: "\e916";
+}
+.icon-monthly:before {
+  content: "\e917";
+}
+.icon-orchestration:before {
+  content: "\e918";
+}
+.icon-refresh:before {
+  content: "\e919";
+}
+.icon-replay:before {
+  content: "\e91a";
+}
+.icon-resource:before {
+  content: "\e91b";
+}
+.icon-search:before {
+  content: "\e91c";
+}
+.icon-sr:before {
+  content: "\e91d";
+}
+.icon-trash:before {
+  content: "\e91e";
+}
+.icon-user:before {
+  content: "\e91f";
+}
+
+
