@@ -1,8 +1,8 @@
 //get accessToken
-import { msalInstance } from 'index';
-import { InteractionRequiredAuthError } from '@azure/msal-browser';
-import { protectedResources } from './authConfig';
-import { setCookie } from 'common/utils/cookie';
+import { msalInstance } from "index";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
+import { protectedResources } from "./authConfig";
+import { setCookie } from "common/utils/cookie";
 
 export const RefreshAccessToken = async () => {
   const redirectResponse = await msalInstance.handleRedirectPromise();
@@ -22,7 +22,7 @@ export const RefreshAccessToken = async () => {
         account: account,
       })
       .then((response) => {
-        setCookie('CMVERIFY', 'verification', response.expiresOn);
+        setCookie("CMVERIFY", "verification", response.expiresOn);
         return response.accessToken;
       })
       .catch(async (error) => {
@@ -34,10 +34,10 @@ export const RefreshAccessToken = async () => {
                 scopes: protectedResources.apiHello.scopes,
               })
               .then((response) => {
-                setCookie('CMVERIFY', 'verification', response.expiresOn);
+                setCookie("CMVERIFY", "verification", response.expiresOn);
                 return response.accessToken;
               })
-              .catch(() => location.reload(true));
+              .catch(() => Window.location.reload(true));
           }
         }
       });

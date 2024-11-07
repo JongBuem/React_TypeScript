@@ -5,17 +5,17 @@
  * to be passed to the login API, a component to display while authentication is in progress or a component to display if an error occurs. For more, visit:
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/getting-started.md
  */
-import React, { useEffect, useState } from 'react';
-import { useMsal, useAccount } from '@azure/msal-react';
+import React, { useEffect, useState } from "react";
+import { useMsal, useAccount } from "@azure/msal-react";
 import {
   InteractionRequiredAuthError,
   InteractionType,
-} from '@azure/msal-browser';
+} from "@azure/msal-browser";
 
-import { loginRequest, protectedResources } from './authConfig';
-import { callApiWithToken } from './fetch';
+import { loginRequest, protectedResources } from "./authConfig";
+import { callApiWithToken } from "./fetch";
 
-export const getProfile = () => {
+export const useGetProfile = () => {
   const authRequest = {
     ...loginRequest,
   };
@@ -31,7 +31,7 @@ export const getProfile = () => {
   const [graphData, setGraphData] = useState(null);
 
   useEffect(() => {
-    if (account && inProgress === 'none' && !graphData) {
+    if (account && inProgress === "none" && !graphData) {
       instance
         .acquireTokenSilent({
           scopes: protectedResources.graphMe.scopes,
@@ -40,7 +40,7 @@ export const getProfile = () => {
         .then((response) => {
           callApiWithToken(
             response.accessToken,
-            protectedResources.graphMe.endpoint,
+            protectedResources.graphMe.endpoint
           ).then((response) => {
             setGraphData(response);
           });
@@ -48,7 +48,7 @@ export const getProfile = () => {
         .catch((error) => {
           // in case if silent token acquisition fails, fallback to an interactive method
           if (error instanceof InteractionRequiredAuthError) {
-            if (account && inProgress === 'none') {
+            if (account && inProgress === "none") {
               instance
                 .acquireTokenPopup({
                   scopes: protectedResources.graphMe.scopes,
@@ -56,7 +56,7 @@ export const getProfile = () => {
                 .then((response) => {
                   callApiWithToken(
                     response.accessToken,
-                    protectedResources.graphMe.endpoint,
+                    protectedResources.graphMe.endpoint
                   ).then((response) => setGraphData(response));
                 })
                 .catch((error) => console.log(error));
@@ -73,7 +73,7 @@ export const getProfile = () => {
   };
 };
 
-export const getToken = () => {
+export const useGetToken = () => {
   const authRequest = {
     ...loginRequest,
   };
@@ -89,7 +89,7 @@ export const getToken = () => {
   const [helloData, setHelloData] = useState(null);
 
   useEffect(() => {
-    if (account && inProgress === 'none' && !helloData) {
+    if (account && inProgress === "none" && !helloData) {
       instance
         .acquireTokenSilent({
           forceRefresh: true,
@@ -113,7 +113,7 @@ export const getToken = () => {
         .catch((error) => {
           // in case if silent token acquisition fails, fallback to an interactive method
           if (error instanceof InteractionRequiredAuthError) {
-            if (account && inProgress === 'none') {
+            if (account && inProgress === "none") {
               instance
                 .acquireTokenPopup({
                   scopes: protectedResources.apiHello.scopes,

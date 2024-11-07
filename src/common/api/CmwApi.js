@@ -1,11 +1,11 @@
-import axios from 'axios';
-import useSWR from 'swr';
-import { getCookie } from 'common/utils/cookie';
-import { RefreshAccessToken } from 'auth/acquireTokenSilent';
+import axios from "axios";
+import useSWR from "swr";
+import { getCookie } from "common/utils/cookie";
+import { RefreshAccessToken } from "auth/acquireTokenSilent";
 
 //Indirect API
 export const axiosInstance = axios.create({
-  baseURL: 'https://cmwapi.azurewebsites.net/v1',
+  baseURL: "https://cmwapi.azurewebsites.net/v1",
   // baseURL: 'http://localhost:8800/v1',
   // baseURL: 'http://localhost:8181/v1',
   // baseURL: 'http://172.30.1.189:8000/v1',
@@ -13,7 +13,7 @@ export const axiosInstance = axios.create({
 
 //Bearer Token
 export const setToken = (token) => {
-  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
 
 export const useAxiosSwr = (url, params, refreshInterval) => {
@@ -22,7 +22,7 @@ export const useAxiosSwr = (url, params, refreshInterval) => {
   const { data, mutate, error, isLoading } = useSWR(
     url,
     fetcher,
-    refreshInterval,
+    refreshInterval
   );
   return {
     data,
@@ -75,24 +75,24 @@ export const putAPI = async (url, body) => {
 export const fileUploadtAPI = async (url, params) => {
   return await axiosInstance.post(url, params, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     },
   });
 };
 
 //파일 다운로드
 export const fileDownloadAPI = async (url) => {
-  return await axiosInstance.get(url, { responseType: 'blob' });
+  return await axiosInstance.get(url, { responseType: "blob" });
 };
 
 //API 응답전 실행
 const requestHandler = async (config) => {
-  const cookieToken = getCookie('CMVERIFY');
+  const cookieToken = getCookie("CMVERIFY");
   if (!cookieToken) {
     const token = await RefreshAccessToken();
     if (token) {
       setToken(token);
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
   }
   return config;
@@ -111,23 +111,23 @@ const responseHandler = (response) => {
 const recursive = async (error) => {
   const url = error.response.config.url;
   const method = error.response.config.method;
-  const errorurl = sessionStorage.getItem('errorurl'); //이전 error url
-  const errorcount = sessionStorage.getItem('errorcount'); //이전 error count
+  const errorurl = sessionStorage.getItem("errorurl"); //이전 error url
+  const errorcount = sessionStorage.getItem("errorcount"); //이전 error count
 
   //에러시 재요청 1번만 더 요청
-  if (url == errorurl && Number(errorcount) < 0 && method == 'get') {
-    sessionStorage.setItem('errorcount', Number(errorcount) + 1);
+  if (url == errorurl && Number(errorcount) < 0 && method == "get") {
+    sessionStorage.setItem("errorcount", Number(errorcount) + 1);
     const ReResponse = await getAPI(url);
     if (ReResponse) return ReResponse;
     else return Promise.reject(error);
-  } else if (url != errorurl && method == 'get') {
-    sessionStorage.setItem('errorurl', url);
-    sessionStorage.setItem('errorcount', 0);
+  } else if (url != errorurl && method == "get") {
+    sessionStorage.setItem("errorurl", url);
+    sessionStorage.setItem("errorcount", 0);
     const ReResponse = await getAPI(url);
     if (ReResponse) return ReResponse;
     else return Promise.reject(error);
-  } else if (error?.response?.status == 401 && method != 'get') {
-    return location.reload(true);
+  } else if (error?.response?.status == 401 && method != "get") {
+    return Window.location.reload(true);
   } else {
     return Promise.reject(error);
   }
@@ -151,11 +151,11 @@ const responseErrorHandler = async (error) => {
 //axios API호출
 axiosInstance.interceptors.request.use(
   async (config) => await requestHandler(config),
-  async (error) => await requestErrorHandler(error),
+  async (error) => await requestErrorHandler(error)
 );
 
 //axios API응답
 axiosInstance.interceptors.response.use(
   async (response) => await responseHandler(response),
-  async (error) => await responseErrorHandler(error),
+  async (error) => await responseErrorHandler(error)
 );
