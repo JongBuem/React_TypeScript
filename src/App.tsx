@@ -11,6 +11,7 @@ interface AppProps {
   instance: PublicClientApplication;
 }
 
+//const App = ({ instance }: AppProps) => {}
 const App: React.FC<AppProps> = ({ instance }) => {
   return (
     <div className="App">

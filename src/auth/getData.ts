@@ -10,25 +10,32 @@ import { useMsal, useAccount } from "@azure/msal-react";
 import {
   InteractionRequiredAuthError,
   InteractionType,
+  AuthenticationResult,
+  AccountInfo,
+  SilentRequest,
 } from "@azure/msal-browser";
 
 import { loginRequest, protectedResources } from "./authConfig";
 import { callApiWithToken } from "./fetch";
 
-export const useGetProfile = () => {
-  const authRequest = {
+export interface GraphData {
+  [key: string]: any;
+}
+
+export interface UseGetProfileResult {
+  graphData: GraphData | null;
+  interactionType: InteractionType;
+  authenticationRequest: SilentRequest;
+}
+
+export const useGetProfile = (): UseGetProfileResult => {
+  const authRequest: SilentRequest = {
     ...loginRequest,
   };
 
-  /**
-   * useMsal is hook that returns the PublicClientApplication instance,
-   * an array of all accounts currently signed in and an inProgress value
-   * that tells you what msal is currently doing. For more, visit:
-   * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/hooks.md
-   */
   const { instance, accounts, inProgress } = useMsal();
-  const account = useAccount(accounts[0] || {});
-  const [graphData, setGraphData] = useState(null);
+  const account = useAccount(accounts[0] || ({} as AccountInfo));
+  const [graphData, setGraphData] = useState<GraphData | null>(null);
 
   useEffect(() => {
     if (account && inProgress === "none" && !graphData) {
@@ -37,34 +44,33 @@ export const useGetProfile = () => {
           scopes: protectedResources.graphMe.scopes,
           account: account,
         })
-        .then((response) => {
+        .then((response: AuthenticationResult) => {
           callApiWithToken(
             response.accessToken,
             protectedResources.graphMe.endpoint
-          ).then((response) => {
-            setGraphData(response);
+          ).then((apiResponse: GraphData) => {
+            setGraphData(apiResponse);
           });
         })
         .catch((error) => {
-          // in case if silent token acquisition fails, fallback to an interactive method
           if (error instanceof InteractionRequiredAuthError) {
             if (account && inProgress === "none") {
               instance
                 .acquireTokenPopup({
                   scopes: protectedResources.graphMe.scopes,
                 })
-                .then((response) => {
+                .then((response: AuthenticationResult) => {
                   callApiWithToken(
                     response.accessToken,
                     protectedResources.graphMe.endpoint
-                  ).then((response) => setGraphData(response));
+                  ).then((apiResponse: GraphData) => setGraphData(apiResponse));
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => console.error(error));
             }
           }
         });
     }
-  }, [account, inProgress, instance]);
+  }, [account, inProgress, instance, graphData]);
 
   return {
     graphData,
@@ -73,20 +79,25 @@ export const useGetProfile = () => {
   };
 };
 
-export const useGetToken = () => {
-  const authRequest = {
+export interface HelloData {
+  token: string;
+  [key: string]: any;
+}
+
+export interface UseGetTokenResult {
+  helloData: HelloData | null;
+  interactionType: InteractionType;
+  authenticationRequest: SilentRequest;
+}
+
+export const useGetToken = (): UseGetTokenResult => {
+  const authRequest: SilentRequest = {
     ...loginRequest,
   };
 
-  /**
-   * useMsal is hook that returns the PublicClientApplication instance,
-   * an array of all accounts currently signed in and an inProgress value
-   * that tells you what msal is currently doing. For more, visit:
-   * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/hooks.md
-   */
   const { instance, accounts, inProgress } = useMsal();
-  const account = useAccount(accounts[0] || {});
-  const [helloData, setHelloData] = useState(null);
+  const account = useAccount(accounts[0] || ({} as AccountInfo));
+  const [helloData, setHelloData] = useState<HelloData | null>(null);
 
   useEffect(() => {
     if (account && inProgress === "none" && !helloData) {
@@ -96,8 +107,9 @@ export const useGetToken = () => {
           scopes: protectedResources.apiHello.scopes,
           account: account,
         })
-        .then((response) => {
+        .then((response: AuthenticationResult) => {
           setHelloData({ token: response.accessToken });
+          // Uncomment below to call API
           // callApiWithToken(
           //   response.accessToken,
           //   protectedResources.apiHello.endpoint,
@@ -111,15 +123,15 @@ export const useGetToken = () => {
           // );
         })
         .catch((error) => {
-          // in case if silent token acquisition fails, fallback to an interactive method
           if (error instanceof InteractionRequiredAuthError) {
             if (account && inProgress === "none") {
               instance
                 .acquireTokenPopup({
                   scopes: protectedResources.apiHello.scopes,
                 })
-                .then((response) => {
+                .then((response: AuthenticationResult) => {
                   setHelloData({ token: response.accessToken });
+                  // Uncomment below to call API
                   // callApiWithToken(
                   //   response.accessToken,
                   //   protectedResources.apiHello.endpoint,
@@ -128,12 +140,12 @@ export const useGetToken = () => {
                   //   setHelloData({ token: response.accessToken, apiResponse }),
                   // );
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => console.error(error));
             }
           }
         });
     }
-  }, [account, inProgress, instance]);
+  }, [account, inProgress, instance, helloData]);
 
   return {
     helloData,

@@ -57,7 +57,7 @@ const Routers = () => {
    * Save to zustand adProfileStore
    */
   React.useEffect(() => {
-    async function Customers(tenantId) {
+    async function Customers(tenantId: string) {
       const result = await getAPI(`/customers/${tenantId}`);
       if (result.data) {
         setCustomer(result.data);
@@ -66,7 +66,7 @@ const Routers = () => {
       }
     }
 
-    async function Profile(mail) {
+    async function Profile(mail: string) {
       const result = await getAPI(`/profiles/email/${mail}`);
       Customers(result?.data?.tenantId);
     }
@@ -85,7 +85,7 @@ const Routers = () => {
    * Save to zustand scheduleListStore
    */
   React.useEffect(() => {
-    async function Schedule(tenantId) {
+    async function Schedule(tenantId: string) {
       const result = await GetSchedule(tenantId);
       setScheduleList(result);
       setScheduleCheck(true);

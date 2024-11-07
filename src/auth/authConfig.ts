@@ -69,7 +69,7 @@ export const protectedResources = {
     scopes: ["User.Read"],
   },
   apiHello: {
-    endpoint: process.env.REACT_APP_CMW_API_ENDPOINT,
-    scopes: [process.env.REACT_APP_CMW_API_SCOPES], // e.g. api://xxxxxx/access_as_user
+    endpoint: process.env.REACT_APP_CMW_API_ENDPOINT!,
+    scopes: [process.env.REACT_APP_CMW_API_SCOPES!], // e.g. api://xxxxxx/access_as_user
   },
 };
