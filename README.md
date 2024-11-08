@@ -15,6 +15,7 @@
   - 2차 진행 파일: router/index.tsx, auth/authConfig.ts, auth/getData.ts,
 
 - 11월 08일
+  - Items.ts 파일에 많은 component들이 있어 한번에 하기 힘들 것 같아 Item.tsx에 필요한 부분만 생성후 변경
   - tag내 map함수사용시 변수로 따로 생성함
   - ex) 생성
 
@@ -30,5 +31,5 @@ interface monitoringData {
 const subscriptions: monitoringData[] = hostList;
 ```
 
-- 1차 진행 파일: index.tsx, App.tsx, App.test.tsx, router/index.tsx, auth/authConfig.ts, auth/getData.ts,
-- 2차 진행 파일: router/index.tsx, auth/authConfig.ts, auth/getData.ts,
+- 1차 진행 파일: router/ScheduleRouter.tsx, pages/schedule/index.tsx, components/schedule/InfoContents.tsx, components/schedule/EditContents.tsx,
+- 2차 진행 파일: components/schedule/EditContents.tsx, Item.tsx
