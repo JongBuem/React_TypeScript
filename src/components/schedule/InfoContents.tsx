@@ -1,34 +1,39 @@
-import React from 'react';
-import clsx from 'clsx';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { CustomTab } from './Tab';
-import { useParams } from 'react-router';
-import calendar from 'assets/images/calendar.png';
-import error from 'assets/images/error.png';
-import { ScheduleRefreshButton } from 'components/schedule/Items';
-import { scheduleListStore } from 'global/schedule';
-import { GetScheduleInfo } from 'pages/schedule';
-import { ScheduleInfo } from 'common/class/schedule';
+import React from "react";
+import clsx from "clsx";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { CustomTab } from "./Tab";
+import { useParams } from "react-router";
+import calendar from "assets/images/calendar.png";
+import error from "assets/images/error.png";
+import { ScheduleRefreshButton } from "components/schedule/Items";
+import { scheduleListStore } from "global/schedule";
+import { GetScheduleInfo } from "pages/schedule";
+import { ScheduleInfo } from "common/class/schedule";
 import {
+  ScheduleData,
   SCHEDULE_KEY_NAME,
   SCHEDULE_KEY_STATE,
-} from 'common/constants/schedule.constant';
+} from "common/constants/schedule.constant";
 
 export default function InfoContents() {
-  console.log('info');
-  const { id } = useParams();
+  console.log("info");
+  const { id } = useParams<{ id: string }>();
   const { scheduleList } = scheduleListStore();
-  const [scheduleInfo, setScheduleInfo] = React.useState({});
+  const [scheduleInfo, setScheduleInfo] = React.useState<ScheduleData | null>(
+    null
+  );
 
-  const init = React.useCallback(async (scheduleID) => {
+  const init = React.useCallback(async (scheduleID: string) => {
     const result = await GetScheduleInfo(scheduleID);
     setScheduleInfo(result);
-  });
+  }, []);
 
   React.useEffect(() => {
-    init(id);
-  }, [id]);
+    if (id) {
+      init(id);
+    }
+  }, [id, init]);
 
   if (scheduleList?.length === 0) {
     return (
@@ -52,8 +57,9 @@ export default function InfoContents() {
         </div>
       </div>
     );
-  } else if (scheduleInfo) {
-    const classObj = new ScheduleInfo(scheduleInfo);
+  } else if (scheduleInfo || scheduleInfo === null) {
+    const data = scheduleInfo !== null ? scheduleInfo : {};
+    const classObj = new ScheduleInfo(data);
     const scheduleData = classObj.scheduleData;
     const hostData = classObj.hostData;
 
@@ -65,12 +71,15 @@ export default function InfoContents() {
               <div className="dp-flex">
                 <div className="st-wrap">
                   <span
-                    className={clsx('st', {
-                      available: scheduleInfo[SCHEDULE_KEY_STATE],
+                    className={clsx("st", {
+                      available:
+                        scheduleInfo && scheduleInfo[SCHEDULE_KEY_STATE],
                     })}
                   ></span>
                 </div>
-                <h5>{scheduleInfo[SCHEDULE_KEY_NAME] ?? ''}</h5>
+                <h5>
+                  {(scheduleInfo && scheduleInfo[SCHEDULE_KEY_NAME]) ?? ""}
+                </h5>
               </div>
             </div>
             <div className="ml-auto">
@@ -90,7 +99,7 @@ export default function InfoContents() {
         </div>
       </div>
     );
-  } else if (!scheduleInfo) {
+  } else {
     return (
       <div className="area-sub">
         <div className="inner">

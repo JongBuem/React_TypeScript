@@ -1,22 +1,22 @@
 //CMW MAin home
-import React from 'react';
-import ContentsHead from 'components/monitoring/ContentsHead';
-import ContentsBody from 'components/monitoring/ContentsBody';
+import React from "react";
+import ContentsHead from "components/monitoring/ContentsHead";
+import ContentsBody from "components/monitoring/ContentsBody";
 import {
   MonitoringHostDATA,
   MonitoringVmDATA,
   MonitoringData,
-} from '../../common/class/monitoring';
-import { monitoringHostStore, monitoringVmStore } from 'global/monitoring';
-import { customerStore } from 'global/customer';
-import { useAxiosSwr } from 'common/api/CmwApi';
+} from "../../common/class/monitoring";
+import { monitoringHostStore, monitoringVmStore } from "global/monitoring";
+import { customerStore } from "global/customer";
+import { useAxiosSwr } from "common/api/CmwApi";
 
 export function GetHost(option, subscriptionId, query) {
-  const value = query ? 'true' : 'false';
+  const value = query ? "true" : "false";
   const { data, error, isValidating, mutate, isLoading } = useAxiosSwr(
     `/monitoring/host-info/${subscriptionId}?filter=${value}`,
     null,
-    option,
+    option
   );
   return {
     mutate,
@@ -31,7 +31,7 @@ export function GetVm(option, subscriptionId) {
   const { data, error, isValidating, mutate, isLoading } = useAxiosSwr(
     `/monitoring/vm-info/${subscriptionId}`,
     null,
-    option,
+    option
   );
   return {
     mutate,
@@ -45,7 +45,7 @@ export function GetVm(option, subscriptionId) {
 export default function Monitoring() {
   const { customer } = customerStore();
   const [subscriptionId, setSubscriptionId] = React.useState(
-    customer?.subscriptions?.items[0]?.id ?? '',
+    customer?.subscriptions?.items[0]?.id ?? ""
   );
   const [dataList, setDataList] = React.useState([]);
   const { host, setHost } = monitoringHostStore();
@@ -55,13 +55,13 @@ export default function Monitoring() {
       refreshInterval: 10000,
     },
     subscriptionId,
-    true,
+    true
   );
   const { data: vmList, isLoading: vmListLoading } = GetVm(
     {
       refreshInterval: 10000,
     },
-    subscriptionId,
+    subscriptionId
   );
 
   // const DataList = React.useMemo(() => {
@@ -74,7 +74,7 @@ export default function Monitoring() {
     const dataList = dataInstance.init(
       dataInstance.host,
       dataInstance.vm,
-      true,
+      true
     );
     return dataList;
   });

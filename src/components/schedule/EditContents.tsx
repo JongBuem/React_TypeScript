@@ -1,13 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
-import { customerStore } from 'global/customer';
-import { scheduleListStore } from 'global/schedule';
-import { adProfileStore } from 'global/profile';
-import { GetSchedule, PatchSchedule } from 'pages/schedule';
-import { TitleInput, ScheduleInformation, EditHostInformation } from './Items';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { customerStore } from "global/customer";
+import { scheduleListStore } from "global/schedule";
+import { adProfileStore } from "global/profile";
+import { GetSchedule, PatchSchedule } from "pages/schedule";
+import { TitleInput, ScheduleInformation, EditHostInformation } from "./Item";
 import {
   loadingStore,
   titleStore,
@@ -16,13 +15,20 @@ import {
   dateStore,
   repeatedStore,
   hostStore,
-} from 'global/newSchedule';
-import moment from 'moment';
-import clsx from 'clsx';
-import { Loading } from 'components/item/Loading';
-import { GetScheduleInfo } from 'pages/schedule';
+} from "global/newSchedule";
+import moment from "moment";
+import clsx from "clsx";
+import { Loading } from "components/item/Loading";
+import { GetScheduleInfo } from "pages/schedule";
+import { ScheduleData } from "common/constants/schedule.constant";
 
-function RegistrationButton({ id }) {
+interface RegistrationButtonProps {
+  id: string | null;
+}
+
+export const RegistrationButton: React.FC<RegistrationButtonProps> = ({
+  id,
+}) => {
   const navigate = useNavigate();
   const { customer } = customerStore();
   const { adProfile } = adProfileStore();
@@ -35,7 +41,7 @@ function RegistrationButton({ id }) {
   const { newRepeatedInput, newRepeated, newWeek, newDayofweek } =
     repeatedStore();
 
-  const EditSchedule = async (scheduleId, body) => {
+  const EditSchedule = async (scheduleId: string, body: ScheduleData) => {
     const create = await PatchSchedule(scheduleId, body); //스케줄 수정
     const list = await GetSchedule(customer.tenantId); //스케줄 리스트
     setScheduleList(list); //스케줄 리스트 업데이트
@@ -47,66 +53,71 @@ function RegistrationButton({ id }) {
       const body = {
         subscriptionId: selectSubscription,
         scheduleName: newTitle,
-        startDateTime: moment(newStartDate + ' ' + newStartTime).format(),
+        startDateTime: moment(newStartDate + " " + newStartTime).format(),
         scheduleType: newRepeated, //반복타입 (반복안함 00, 주 01, 월 02)
         useYn: status,
-        updateUser: adProfile.mail ?? '',
+        updateUser: adProfile.mail ?? "",
         targetHostList: newCheckHostList,
-        repeatCycleMonth: newRepeated === '02' ? newRepeatedInput : 0, //월 반복 타입
+        repeatCycleMonth: newRepeated === "02" ? newRepeatedInput : 0, //월 반복 타입
         repeatCycleWeek:
-          newRepeated === '00'
+          newRepeated === "00"
             ? 0
-            : newRepeated === '01'
+            : newRepeated === "01"
             ? newRepeatedInput
             : Number(newWeek), //주 반복 타입 = 첫 번째주(1), 둘 번째주(2), 셋 번째주(3), 넷 번째주(4)
-        repeatCycleDay: newRepeated === '00' ? 0 : Number(newDayofweek), //요일 반복 타입  = 월(0), 화(1), 수(2), 목(3), 금(4), 토(5), 일(6)
+        repeatCycleDay: newRepeated === "00" ? 0 : Number(newDayofweek), //요일 반복 타입  = 월(0), 화(1), 수(2), 목(3), 금(4), 토(5), 일(6)
       };
       // console.log(body);
-      EditSchedule(id, body);
+      EditSchedule(id, body as ScheduleData);
     }
   };
 
   const DisabledCheck = () => {
-    if (
-      newTitle.length === 0 ||
-      selectSubscription.length === 0 ||
+    return (
+      !newTitle ||
+      !selectSubscription ||
       newCheckHostList.length === 0 ||
-      !isNaN(Date.parse(moment(newStartDate + ' ' + newStartTime).format())) ===
-        false
-    )
-      return true;
-    else return false;
+      isNaN(Date.parse(moment(`${newStartDate} ${newStartTime}`).format()))
+    );
   };
 
   return (
     <button
-      className={clsx('btn', {
-        'btn-solid': !DisabledCheck(),
-        'btn-ghost': DisabledCheck(),
+      className={clsx("btn", {
+        "btn-solid": !DisabledCheck(),
+        "btn-ghost": DisabledCheck(),
       })}
-      style={{ cursor: DisabledCheck() ? 'context-menu' : 'pointer' }}
+      style={{ cursor: DisabledCheck() ? "context-menu" : "pointer" }}
       onClick={RegistrationEvent}
       disabled={DisabledCheck()}
     >
       수정완료
     </button>
   );
-}
+};
 
 function EditContents() {
-  console.log('Edit');
+  console.log("Edit");
   const { loading } = loadingStore();
   const { id } = useParams();
-  const [scheduleInfo, setScheduleInfo] = React.useState({});
+  const [scheduleInfoID, setScheduleInfoID] = React.useState<string | null>(
+    null
+  );
+  const [scheduleInfo, setScheduleInfo] = React.useState<ScheduleData | null>(
+    null
+  );
 
-  const init = React.useCallback(async (scheduleID) => {
+  const init = React.useCallback(async (scheduleID: string) => {
     const result = await GetScheduleInfo(scheduleID);
     setScheduleInfo(result);
-  });
+    setScheduleInfoID(result._id);
+  }, []);
 
   React.useEffect(() => {
-    init(id);
-  }, [id]);
+    if (id) {
+      init(id);
+    }
+  }, [id, init]);
 
   return (
     <div className="area-sub">
@@ -117,7 +128,7 @@ function EditContents() {
               <Link className="btn btn-outline" to={`/schedule/info/${id}`}>
                 취소
               </Link>
-              <RegistrationButton id={scheduleInfo?._id} />
+              <RegistrationButton id={scheduleInfoID} />
             </div>
           </div>
         </div>
@@ -128,7 +139,7 @@ function EditContents() {
           </div>
         </div>
         <div id="schedule-thum-default" className="tabcontent">
-          <table className="tbl tbl-basic" style={{ width: '100%' }}>
+          <table className="tbl tbl-basic" style={{ width: "100%" }}>
             <tbody>
               <tr>
                 <td className="align-center">
@@ -150,11 +161,5 @@ function EditContents() {
     </div>
   );
 }
-RegistrationButton.propTypes = {
-  id: PropTypes.any,
-};
-EditContents.propTypes = {
-  buttonState: PropTypes.func,
-};
 
 export default React.memo(EditContents);

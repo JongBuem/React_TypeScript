@@ -1,11 +1,11 @@
-import React from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
-import { withCookies } from 'react-cookie';
-import Schedule from 'pages/schedule/index';
+import React from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { withCookies } from "react-cookie";
+import Schedule from "pages/schedule/index";
 
-import EditContents from 'components/schedule/EditContents';
-import InfoContents from 'components/schedule/InfoContents';
-import NewContents from 'components/schedule/NewContents';
+import EditContents from "components/schedule/EditContents";
+import InfoContents from "components/schedule/InfoContents";
+import NewContents from "components/schedule/NewContents";
 
 const ScheduleRouter = () => {
   return (

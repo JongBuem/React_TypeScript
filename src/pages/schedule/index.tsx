@@ -1,29 +1,11 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import HeadContents from 'components/schedule/HeadContents';
-import LeftContents from 'components/schedule/LeftContents';
-import PropTypes from 'prop-types';
-import { useAxiosSwr, getAPI, postAPI, patchAPI } from 'common/api/CmwApi';
+import React from "react";
+import { Outlet } from "react-router-dom";
+import HeadContents from "components/schedule/HeadContents";
+import LeftContents from "components/schedule/LeftContents";
+import { useAxiosSwr, getAPI, postAPI, patchAPI } from "common/api/CmwApi";
+import { ScheduleData } from "common/constants/schedule.constant";
 
-// export const GetSchedule = () => {
-//   const { customer } = customerStore();
-//   const [helloData, setHelloData] = useState([]);
-
-//   const GET = async (customerId) => {
-//     console.log(customerId);
-//     const result = await getAPI('/schedule');
-//     if (result?.data?.length > 0) setHelloData(result.data);
-//     else setHelloData([]);
-//   };
-
-//   useEffect(() => {
-//     GET(customer);
-//   }, [customer]);
-
-//   return helloData;
-// };
-
-export async function GetScheduleInfo(scheduleId) {
+export async function GetScheduleInfo(scheduleId: string) {
   return await getAPI(`/schedule/${scheduleId}`)
     .then(({ data }) => {
       return {
@@ -34,7 +16,7 @@ export async function GetScheduleInfo(scheduleId) {
     .catch(() => undefined);
 }
 
-export async function GetSchedule(tenantId) {
+export async function GetSchedule(tenantId: string) {
   return await getAPI(`/schedule/tenantId/${tenantId}`)
     .then(({ data }) => {
       if (data?.length > 0) return data;
@@ -43,7 +25,7 @@ export async function GetSchedule(tenantId) {
     .catch(() => []);
 }
 
-export async function PostSchedule(body) {
+export async function PostSchedule(body: ScheduleData) {
   return await postAPI(`/schedule/tenantId/${body.tenantId}`, body)
     .then(({ data }) => {
       if (data?._id) return data._id;
@@ -52,7 +34,7 @@ export async function PostSchedule(body) {
     .catch(() => undefined);
 }
 
-export async function PatchSchedule(scheduleId, body) {
+export async function PatchSchedule(scheduleId: string, body: ScheduleData) {
   return await patchAPI(`/schedule/${scheduleId}`, body)
     .then(({ data }) => {
       if (data?._id) return data._id;
@@ -61,11 +43,15 @@ export async function PatchSchedule(scheduleId, body) {
     .catch(() => undefined);
 }
 
-export function GetScheduleLog(customerId, scheduleID, option = {}) {
+export function GetScheduleLog(
+  customerId: string,
+  scheduleID: string,
+  option = {}
+) {
   const { data, error, mutate, isLoading } = useAxiosSwr(
     `/logs/${customerId}/schedules/${scheduleID}`,
     null,
-    option,
+    option
   );
   return {
     mutate,
@@ -76,7 +62,7 @@ export function GetScheduleLog(customerId, scheduleID, option = {}) {
 }
 
 function Schedule() {
-  console.log('Schedule');
+  console.log("Schedule");
 
   return (
     <React.Fragment>
@@ -94,7 +80,4 @@ function Schedule() {
     </React.Fragment>
   );
 }
-Schedule.propTypes = {
-  content: PropTypes.any,
-};
 export default React.memo(Schedule);
