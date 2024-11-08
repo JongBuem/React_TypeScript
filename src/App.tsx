@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import React from "react";
+import "./assets/css/App.css";
+import "./assets/css/style.css";
+import Routers from "./router";
+import ErrorBoundary from "./pages/error/ErrorBoundary";
+import { MsalProvider } from "@azure/msal-react";
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
+import { PublicClientApplication } from "@azure/msal-browser";
+interface AppProps {
+  instance: PublicClientApplication;
 }
 
+//const App = ({ instance }: AppProps) => {}
+const App: React.FC<AppProps> = ({ instance }) => {
+  return (
+    <div className="App">
+      <SimpleBar style={{ maxHeight: "100vh" }}>
+        <ErrorBoundary>
+          <MsalProvider instance={instance}>
+            <Routers />
+          </MsalProvider>
+        </ErrorBoundary>
+      </SimpleBar>
+    </div>
+  );
+};
 export default App;
