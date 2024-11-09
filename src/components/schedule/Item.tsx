@@ -210,6 +210,10 @@ export const ScheduleInformationSubscriptionInput = React.memo(
       }
     }, [value]);
 
+    interface TestItem {
+      id: string;
+    }
+    const subscriptionsArray: TestItem[] = subscriptions;
     return (
       <td className="align-center">
         <select
@@ -219,7 +223,7 @@ export const ScheduleInformationSubscriptionInput = React.memo(
           onChange={SelectHandleChange}
         >
           <option value="">선택</option>
-          {subscriptions.map((v: any, i: number) => (
+          {subscriptionsArray.map((v, i) => (
             <option key={i} value={v?.id ?? ""}>
               {v?.id ?? ""}
             </option>
