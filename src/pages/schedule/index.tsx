@@ -3,9 +3,14 @@ import { Outlet } from "react-router-dom";
 import HeadContents from "components/schedule/HeadContents";
 import LeftContents from "components/schedule/LeftContents";
 import { useAxiosSwr, getAPI, postAPI, patchAPI } from "common/api/CmwApi";
-import { ScheduleData } from "common/constants/schedule.constant";
+import {
+  ScheduleData,
+  GetScheduleInfoData,
+} from "common/constants/schedule.constant";
 
-export async function GetScheduleInfo(scheduleId: string) {
+export async function GetScheduleInfo(
+  scheduleId: string
+): Promise<GetScheduleInfoData> {
   return await getAPI(`/schedule/${scheduleId}`)
     .then(({ data }) => {
       return {
@@ -16,7 +21,7 @@ export async function GetScheduleInfo(scheduleId: string) {
     .catch(() => undefined);
 }
 
-export async function GetSchedule(tenantId: string) {
+export async function GetSchedule(tenantId: string): Promise<ScheduleData[]> {
   return await getAPI(`/schedule/tenantId/${tenantId}`)
     .then(({ data }) => {
       if (data?.length > 0) return data;
@@ -25,29 +30,34 @@ export async function GetSchedule(tenantId: string) {
     .catch(() => []);
 }
 
-export async function PostSchedule(body: ScheduleData) {
+export async function PostSchedule(
+  body: ScheduleData
+): Promise<string | boolean> {
   return await postAPI(`/schedule/tenantId/${body.tenantId}`, body)
     .then(({ data }) => {
       if (data?._id) return data._id;
-      else return undefined;
+      else return false;
     })
-    .catch(() => undefined);
+    .catch(() => false);
 }
 
-export async function PatchSchedule(scheduleId: string, body: ScheduleData) {
+export async function PatchSchedule(
+  scheduleId: string,
+  body: ScheduleData
+): Promise<string | boolean> {
   return await patchAPI(`/schedule/${scheduleId}`, body)
     .then(({ data }) => {
       if (data?._id) return data._id;
-      else return undefined;
+      else return false;
     })
-    .catch(() => undefined);
+    .catch(() => false);
 }
 
-export function GetScheduleLog(
+export const GetScheduleLog = (
   customerId: string,
   scheduleID: string,
   option = {}
-) {
+) => {
   const { data, error, mutate, isLoading } = useAxiosSwr(
     `/logs/${customerId}/schedules/${scheduleID}`,
     null,
@@ -59,11 +69,9 @@ export function GetScheduleLog(
     isLoading,
     isError: error,
   };
-}
+};
 
 function Schedule() {
-  console.log("Schedule");
-
   return (
     <React.Fragment>
       <HeadContents />
