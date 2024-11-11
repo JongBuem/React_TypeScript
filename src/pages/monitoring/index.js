@@ -11,12 +11,12 @@ import { monitoringHostStore, monitoringVmStore } from "global/monitoring";
 import { customerStore } from "global/customer";
 import { useAxiosSwr } from "common/api/CmwApi";
 
-export function GetHost(option, subscriptionId, query) {
+export function GetHost(refreshInterval, subscriptionId, query) {
   const value = query ? "true" : "false";
   const { data, error, isValidating, mutate, isLoading } = useAxiosSwr(
     `/monitoring/host-info/${subscriptionId}?filter=${value}`,
     null,
-    option
+    refreshInterval
   );
   return {
     mutate,
@@ -27,11 +27,11 @@ export function GetHost(option, subscriptionId, query) {
   };
 }
 
-export function GetVm(option, subscriptionId) {
+export function GetVm(refreshInterval, subscriptionId) {
   const { data, error, isValidating, mutate, isLoading } = useAxiosSwr(
     `/monitoring/vm-info/${subscriptionId}`,
     null,
-    option
+    refreshInterval
   );
   return {
     mutate,
@@ -51,16 +51,12 @@ export default function Monitoring() {
   const { host, setHost } = monitoringHostStore();
   const { vm, setVm } = monitoringVmStore();
   const { data: hostList, isLoading: hostListLoading } = GetHost(
-    {
-      refreshInterval: 10000,
-    },
+    10000,
     subscriptionId,
     true
   );
   const { data: vmList, isLoading: vmListLoading } = GetVm(
-    {
-      refreshInterval: 10000,
-    },
+    10000,
     subscriptionId
   );
 
