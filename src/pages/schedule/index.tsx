@@ -56,12 +56,12 @@ export async function PatchSchedule(
 export const GetScheduleLog = (
   customerId: string,
   scheduleID: string,
-  option = {}
+  refreshInterval: number
 ) => {
   const { data, error, mutate, isLoading } = useAxiosSwr(
     `/logs/${customerId}/schedules/${scheduleID}`,
     null,
-    option
+    refreshInterval
   );
   return {
     mutate,

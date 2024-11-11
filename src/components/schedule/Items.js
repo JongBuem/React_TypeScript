@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import { GetHost } from 'pages/monitoring';
-import { ScheduleHostLogDATA } from 'common/class/log';
-import { ScheduleHostDATA } from 'common/class/schedule';
-import { NumericFormat } from 'react-number-format';
-import { systemcodeStore } from 'global/systemcode';
+import React from "react";
+import PropTypes from "prop-types";
+import moment from "moment";
+import { GetHost } from "pages/monitoring";
+import { ScheduleHostLogDATA } from "common/class/log";
+import { ScheduleHostDATA } from "common/class/schedule";
+import { NumericFormat } from "react-number-format";
+import { systemcodeStore } from "global/systemcode";
 import {
   loadingStore,
   titleStore,
@@ -14,15 +14,15 @@ import {
   dateStore,
   repeatedStore,
   hostStore,
-} from 'global/newSchedule';
-import { getAPI } from 'common/api/CmwApi';
-import Paging, { usePagination } from 'components/item/Paging';
+} from "global/newSchedule";
+import { getAPI } from "common/api/CmwApi";
+import Paging, { usePagination } from "components/item/Paging";
 import {
   scheduleListStore,
   scheduleHostLogStore,
   scheduleLogStore,
-} from 'global/schedule';
-import { customerStore } from 'global/customer';
+} from "global/schedule";
+import { customerStore } from "global/customer";
 import {
   LOG_KEY_ACTION,
   LOG_KEY_STATUS,
@@ -34,13 +34,13 @@ import {
   LOG_HOST_KEY_LOCATION,
   LOG_HOST_KEY_OLDNAME,
   LOG_HOST_KEY_NEWNAME,
-} from 'common/constants/log.constant';
+} from "common/constants/log.constant";
 import {
   MONITORING_HOST_KEY_NAME,
   MONITORING_HOST_KEY_SKU,
   MONITORING_HOST_KEY_SKU_LOCATION,
   MONITORING_HOST_KEY_STATUSES,
-} from 'common/constants/monitoring.constant';
+} from "common/constants/monitoring.constant";
 import {
   SCHEDULE_KEY_NAME,
   SCHEDULE_KEY_SUBSID,
@@ -51,25 +51,25 @@ import {
   SCHEDULE_KEY_REPEATCYCLEMONTH,
   SCHEDULE_KEY_REPEATCYCLEWEEK,
   SCHEDULE_KEY_REPEATCYCLEDAY,
-} from 'common/constants/schedule.constant';
-import { GetScheduleLog, GetSchedule } from 'pages/schedule';
+} from "common/constants/schedule.constant";
+import { GetScheduleLog, GetSchedule } from "pages/schedule";
 
 export const ScheduleLogItem = React.memo(function ScheduleLogItem({ item }) {
   const { systemcode } = systemcodeStore();
 
   const findAction = (value) => {
     const result = systemcode.find((v) => v?.codeValue === value);
-    return result?.description ?? '';
+    return result?.description ?? "";
   };
 
   const result = {
-    jobCount: item[LOG_KEY_JOBCOUNT] ? item[LOG_KEY_JOBCOUNT] + '회' : '',
-    action: item[LOG_KEY_ACTION] ?? '',
-    status: item[LOG_KEY_STATUS] ?? '',
-    description: item[LOG_KEY_DESCRIPTION] ?? '',
+    jobCount: item[LOG_KEY_JOBCOUNT] ? item[LOG_KEY_JOBCOUNT] + "회" : "",
+    action: item[LOG_KEY_ACTION] ?? "",
+    status: item[LOG_KEY_STATUS] ?? "",
+    description: item[LOG_KEY_DESCRIPTION] ?? "",
     createdAt: item[LOG_KEY_CREATEDAT]
-      ? moment(item[LOG_KEY_CREATEDAT]).format('YYYY-MM-DD hh:mm a')
-      : '',
+      ? moment(item[LOG_KEY_CREATEDAT]).format("YYYY-MM-DD hh:mm a")
+      : "",
   };
 
   return (
@@ -92,9 +92,11 @@ export const ScheduleLog = React.memo(function ScheduleLog({ id }) {
   const { customer } = customerStore();
   const { setScheduleLog, scheduleLog, jobCount, action, status } =
     scheduleLogStore();
-  const { data, isLoading, isError } = GetScheduleLog(customer.tenantId, id, {
-    refreshInterval: 5000,
-  });
+  const { data, isLoading, isError } = GetScheduleLog(
+    customer.tenantId,
+    id,
+    5000
+  );
   const [log, setLog] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [viewItem] = React.useState(10);
@@ -106,7 +108,7 @@ export const ScheduleLog = React.memo(function ScheduleLog({ id }) {
   };
 
   React.useEffect(() => {
-    handleChange('', 1);
+    handleChange("", 1);
   }, [count]);
 
   React.useEffect(() => {
@@ -134,32 +136,32 @@ export const ScheduleLog = React.memo(function ScheduleLog({ id }) {
     };
 
     if (scheduleLog?.length > 0) {
-      if (jobCount === 'all' && action === 'all' && status === 'all')
+      if (jobCount === "all" && action === "all" && status === "all")
         setLog(scheduleLog);
-      else if (jobCount !== 'all' && action === 'all' && status === 'all')
+      else if (jobCount !== "all" && action === "all" && status === "all")
         setLog(scheduleLog.filter((v) => jobCountCheck(v)));
-      else if (jobCount === 'all' && action !== 'all' && status === 'all')
+      else if (jobCount === "all" && action !== "all" && status === "all")
         setLog(scheduleLog.filter((v) => actionCheck(v)));
-      else if (jobCount === 'all' && action === 'all' && status !== 'all')
+      else if (jobCount === "all" && action === "all" && status !== "all")
         setLog(scheduleLog.filter((v) => statusCheck(v)));
-      else if (jobCount !== 'all' && action !== 'all' && status === 'all')
+      else if (jobCount !== "all" && action !== "all" && status === "all")
         setLog(scheduleLog.filter((v) => jobCountCheck(v) && actionCheck(v)));
-      else if (jobCount !== 'all' && action === 'all' && status !== 'all')
+      else if (jobCount !== "all" && action === "all" && status !== "all")
         setLog(scheduleLog.filter((v) => jobCountCheck(v) && statusCheck(v)));
-      else if (jobCount === 'all' && action !== 'all' && status !== 'all')
+      else if (jobCount === "all" && action !== "all" && status !== "all")
         setLog(scheduleLog.filter((v) => actionCheck(v) && statusCheck(v)));
-      else if (jobCount !== 'all' && action !== 'all' && status !== 'all')
+      else if (jobCount !== "all" && action !== "all" && status !== "all")
         setLog(
           scheduleLog.filter(
-            (v) => jobCountCheck(v) && actionCheck(v) && statusCheck(v),
-          ),
+            (v) => jobCountCheck(v) && actionCheck(v) && statusCheck(v)
+          )
         );
     }
   }, [scheduleLog, jobCount, action, status]);
 
   return (
     <>
-      <table className="tbl tbl-basic" style={{ width: '100%' }}>
+      <table className="tbl tbl-basic" style={{ width: "100%" }}>
         <colgroup>
           <col width="15%" />
           <col width="" />
@@ -193,14 +195,16 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({ id }) {
   const { customer } = customerStore();
   const { setScheduleHostLog, scheduleHostLog, jobCount } =
     scheduleHostLogStore();
-  const { data, isLoading, isError } = GetScheduleLog(customer.tenantId, id, {
-    refreshInterval: 5000,
-  });
+  const { data, isLoading, isError } = GetScheduleLog(
+    customer.tenantId,
+    id,
+    5000
+  );
   const [log, setLog] = React.useState([]);
 
   const text = (value) => {
-    const valueArray = value.split('/');
-    const result = valueArray[valueArray.length - 1] ?? '';
+    const valueArray = value.split("/");
+    const result = valueArray[valueArray.length - 1] ?? "";
     return result;
   };
 
@@ -218,8 +222,8 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({ id }) {
     const jobCountCheck = (v) => {
       if (
         v[LOG_KEY_JOBCOUNT] == jobCount &&
-        v[LOG_KEY_STATUS] == 'Accepted' &&
-        v[LOG_KEY_ACTION] == '10' &&
+        v[LOG_KEY_STATUS] == "Accepted" &&
+        v[LOG_KEY_ACTION] == "10" &&
         v[LOG_KEY_HOSTINFO]
       )
         return true;
@@ -240,7 +244,7 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({ id }) {
       const hostLogInstance = new ScheduleHostLogDATA(result);
       const hostLoglist = hostLogInstance.init(hostLogInstance.data);
       const sortlist = hostLoglist.sort((a, b) =>
-        a[LOG_HOST_KEY_OLDNAME].localeCompare(b[LOG_HOST_KEY_OLDNAME]),
+        a[LOG_HOST_KEY_OLDNAME].localeCompare(b[LOG_HOST_KEY_OLDNAME])
       );
       setLog(sortlist);
     }
@@ -249,7 +253,7 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({ id }) {
   return (
     <>
       <div className="tabcontent">
-        <table className="tbl tbl-basic" style={{ width: '100%' }}>
+        <table className="tbl tbl-basic" style={{ width: "100%" }}>
           <colgroup>
             <col width="25%" />
             <col width="25%" />
@@ -268,14 +272,14 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({ id }) {
             {log.map((v, i) => (
               <tr key={i}>
                 <td className="align-center">
-                  {v[LOG_HOST_KEY_OLDNAME] ?? ''}
+                  {v[LOG_HOST_KEY_OLDNAME] ?? ""}
                 </td>
                 <td className="align-center">
-                  {text(v[LOG_HOST_KEY_NEWNAME]) ?? ''}
+                  {text(v[LOG_HOST_KEY_NEWNAME]) ?? ""}
                 </td>
-                <td className="align-center">{v[LOG_HOST_KEY_SKU] ?? ''}</td>
+                <td className="align-center">{v[LOG_HOST_KEY_SKU] ?? ""}</td>
                 <td className="align-center">
-                  {v[LOG_HOST_KEY_LOCATION] ?? ''}
+                  {v[LOG_HOST_KEY_LOCATION] ?? ""}
                 </td>
               </tr>
             ))}
@@ -290,7 +294,7 @@ export const TitleInput = React.memo(function TitleInput({
   scheduleInfo = {},
 }) {
   const { setNewTitle } = titleStore();
-  const [title, setTitle] = React.useState('');
+  const [title, setTitle] = React.useState("");
   const handleChange = React.useCallback((e) => {
     setTitle(e.target.value);
     setNewTitle(e.target.value);
@@ -298,7 +302,7 @@ export const TitleInput = React.memo(function TitleInput({
 
   //초기화
   React.useEffect(() => {
-    if (scheduleInfo[SCHEDULE_KEY_NAME] === undefined) setNewTitle('');
+    if (scheduleInfo[SCHEDULE_KEY_NAME] === undefined) setNewTitle("");
     else handleChange({ target: { value: scheduleInfo[SCHEDULE_KEY_NAME] } });
   }, [scheduleInfo?.scheduleName]);
 
@@ -306,7 +310,7 @@ export const TitleInput = React.memo(function TitleInput({
     <input
       type="text"
       className="fm-control"
-      style={{ width: '100%' }}
+      style={{ width: "100%" }}
       value={title}
       placeholder="예약명을 입력해 주세요."
       onChange={handleChange}
@@ -345,7 +349,7 @@ export const TabHostLogSelects = React.memo(function TabHostLogSelects({
           <li>
             <select
               className="fm-control"
-              style={{ width: '100px' }}
+              style={{ width: "100px" }}
               value={jobCount}
               onChange={RoundSelectEventHandle}
             >
@@ -368,7 +372,7 @@ export const TabLogSelects = React.memo(function TabLogSelects({ index }) {
 
   const findAction = (value) => {
     const result = systemcode.find((v) => v?.codeValue === value);
-    return result?.description ?? '';
+    return result?.description ?? "";
   };
 
   const Deduplication = (array, key) => {
@@ -391,7 +395,7 @@ export const TabLogSelects = React.memo(function TabLogSelects({ index }) {
   };
 
   React.useEffect(() => {
-    const value = { target: { value: 'all' } };
+    const value = { target: { value: "all" } };
     RoundSelectEventHandle(value);
     ActionSelectEventHandle3(value);
     StatusSelectEventHandle(value);
@@ -404,10 +408,10 @@ export const TabLogSelects = React.memo(function TabLogSelects({ index }) {
           <li>
             <select
               className="fm-control"
-              style={{ width: '100px' }}
+              style={{ width: "100px" }}
               onChange={RoundSelectEventHandle}
             >
-              <option value={'all'}>전체 회차</option>
+              <option value={"all"}>전체 회차</option>
               {Deduplication(scheduleLog, LOG_KEY_JOBCOUNT).map((v, i) => (
                 <option key={i} value={v}>
                   {v}회차
@@ -418,10 +422,10 @@ export const TabLogSelects = React.memo(function TabLogSelects({ index }) {
           <li>
             <select
               className="fm-control"
-              style={{ width: '100px' }}
+              style={{ width: "100px" }}
               onChange={ActionSelectEventHandle3}
             >
-              <option value={'all'}>전체 작업</option>
+              <option value={"all"}>전체 작업</option>
               {Deduplication(scheduleLog, LOG_KEY_ACTION).map((v, i) => (
                 <option key={i} value={v}>
                   {findAction(v)}
@@ -432,10 +436,10 @@ export const TabLogSelects = React.memo(function TabLogSelects({ index }) {
           <li>
             <select
               className="fm-control"
-              style={{ width: '100px' }}
+              style={{ width: "100px" }}
               onChange={StatusSelectEventHandle}
             >
-              <option value={'all'}>전체 상태</option>
+              <option value={"all"}>전체 상태</option>
               {Deduplication(scheduleLog, LOG_KEY_STATUS).map((v, i) => (
                 <option key={i} value={v}>
                   {v}
@@ -480,12 +484,12 @@ export const ScheduleInformationStatusInput = React.memo(
         <select
           value={select}
           className="fm-control"
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           onChange={SelectHandleChange}
         >
           {[
-            { label: '활성화', value: true },
-            { label: '비활성화', value: false },
+            { label: "활성화", value: true },
+            { label: "비활성화", value: false },
           ].map((v, i) => (
             <option key={i} value={v.value}>
               {v.label}
@@ -494,7 +498,7 @@ export const ScheduleInformationStatusInput = React.memo(
         </select>
       </td>
     );
-  },
+  }
 );
 
 export const ScheduleInformationSubscriptionInput = React.memo(
@@ -502,14 +506,14 @@ export const ScheduleInformationSubscriptionInput = React.memo(
     const { setLoading } = loadingStore();
     const { customer } = customerStore();
     const { subscriptions, setSelectSubscription } = subscriptionStore();
-    const [select, setSelect] = React.useState('');
+    const [select, setSelect] = React.useState("");
 
     const updateHost = async (id) => {
       if (id && id?.length > 0) {
         try {
           setLoading(true);
           await getAPI(
-            `/monitoring/ms-host-info/tenant/${customer.tenantId}/subscription/${id}`,
+            `/monitoring/ms-host-info/tenant/${customer.tenantId}/subscription/${id}`
           );
           setTimeout(() => setLoading(false), 1500);
         } catch {
@@ -527,7 +531,7 @@ export const ScheduleInformationSubscriptionInput = React.memo(
 
     //초기화
     React.useEffect(() => {
-      if (value === undefined) setSelectSubscription('');
+      if (value === undefined) setSelectSubscription("");
       else SelectHandleChange({ target: { value: value } });
     }, [value]);
 
@@ -536,28 +540,28 @@ export const ScheduleInformationSubscriptionInput = React.memo(
         <select
           value={select}
           className="fm-control"
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           onChange={SelectHandleChange}
         >
           <option value="">선택</option>
           {subscriptions.map((v, i) => (
-            <option key={i} value={v?.id ?? ''}>
-              {v?.id ?? ''}
+            <option key={i} value={v?.id ?? ""}>
+              {v?.id ?? ""}
             </option>
           ))}
         </select>
       </td>
     );
-  },
+  }
 );
 
 export const ScheduleInformationDateInput = React.memo(
   function ScheduleInformationDateInput({ value }) {
     const { setNewStartDate, setNewStartTime } = dateStore();
     const [startDate, setStartDate] = React.useState(
-      moment().format('YYYY-MM-DD'),
+      moment().format("YYYY-MM-DD")
     );
-    const [startTime, setStartTime] = React.useState(moment().format('HH:mm'));
+    const [startTime, setStartTime] = React.useState(moment().format("HH:mm"));
     const StartDateHandleChange = React.useCallback((e) => {
       setStartDate(e.target.value);
       setNewStartDate(e.target.value);
@@ -570,14 +574,14 @@ export const ScheduleInformationDateInput = React.memo(
     //초기화
     React.useEffect(() => {
       if (value === undefined) {
-        setNewStartDate(moment().format('YYYY-MM-DD'));
-        setNewStartTime(moment().format('HH:mm'));
+        setNewStartDate(moment().format("YYYY-MM-DD"));
+        setNewStartTime(moment().format("HH:mm"));
       } else {
         StartDateHandleChange({
-          target: { value: moment(value).format('YYYY-MM-DD') },
+          target: { value: moment(value).format("YYYY-MM-DD") },
         });
         StartTimeHandleChange({
-          target: { value: moment(value).format('HH:mm') },
+          target: { value: moment(value).format("HH:mm") },
         });
       }
     }, [value]);
@@ -587,7 +591,7 @@ export const ScheduleInformationDateInput = React.memo(
         <input
           type="date"
           className="fm-control"
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           value={startDate}
           onChange={StartDateHandleChange}
         />
@@ -595,30 +599,30 @@ export const ScheduleInformationDateInput = React.memo(
         <input
           type="time"
           className="fm-control"
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           value={startTime}
           onChange={StartTimeHandleChange}
         />
       </td>
     );
-  },
+  }
 );
 
 export const ScheduleInformationRepeatedInput = React.memo(
   function ScheduleInformationRepeatedInput({ value }) {
     const { setNewRepeatedInput, setNewRepeated, setNewWeek, setNewDayofweek } =
       repeatedStore();
-    const [repeatedInput, setRepeatedInput] = React.useState('');
-    const [repeated, setRepeated] = React.useState('00');
-    const [week, setWeek] = React.useState('1'); //주
-    const [dayofweek, setDayofweek] = React.useState('0'); //요일
+    const [repeatedInput, setRepeatedInput] = React.useState("");
+    const [repeated, setRepeated] = React.useState("00");
+    const [week, setWeek] = React.useState("1"); //주
+    const [dayofweek, setDayofweek] = React.useState("0"); //요일
 
     const RepeatedInputHandleChange = React.useCallback((v) => {
       setRepeatedInput(v);
       setNewRepeatedInput(v);
     }, []);
     const RepeatedHandleChange = React.useCallback((e) => {
-      if (e.target.value === '00') RepeatedInputHandleChange('');
+      if (e.target.value === "00") RepeatedInputHandleChange("");
       setRepeated(e.target.value);
       setNewRepeated(e.target.value);
     }, []);
@@ -632,40 +636,40 @@ export const ScheduleInformationRepeatedInput = React.memo(
     }, []);
 
     const RepeatedInputDisabled = React.useCallback((arg) => {
-      if (arg === '00') return true;
+      if (arg === "00") return true;
       else return false;
     });
     const RepeatedOptionsInputOpen = React.useCallback((arg) => {
-      if (arg !== '00') return true;
+      if (arg !== "00") return true;
       else return false;
     });
     const RepeatedWeekOptionInputOpen = React.useCallback((arg) => {
-      if (arg == '02') return true;
+      if (arg == "02") return true;
       else return false;
     });
     const RepeatedDayofweekOptionInputOpen = React.useCallback((arg) => {
-      if (arg == '01' || arg == '02') return true;
+      if (arg == "01" || arg == "02") return true;
       else return false;
     });
 
     //초기화
     React.useEffect(() => {
       if (value === undefined) {
-        setNewRepeatedInput('');
-        setNewRepeated('00');
-        setNewWeek('1');
-        setNewDayofweek('0');
+        setNewRepeatedInput("");
+        setNewRepeated("00");
+        setNewWeek("1");
+        setNewDayofweek("0");
       } else {
-        if (value?.repeated !== '00') {
+        if (value?.repeated !== "00") {
           RepeatedInputHandleChange(value?.repeatedInput);
           RepeatedHandleChange({ target: { value: value?.repeated } });
           WeekHandleChange({ target: { value: value?.week } });
           DayofweekHandleChange({ target: { value: value?.dayofweek } });
         } else {
-          setNewRepeatedInput('');
-          setNewRepeated('00');
-          setNewWeek('1');
-          setNewDayofweek('0');
+          setNewRepeatedInput("");
+          setNewRepeated("00");
+          setNewWeek("1");
+          setNewDayofweek("0");
         }
       }
     }, [value]);
@@ -676,7 +680,7 @@ export const ScheduleInformationRepeatedInput = React.memo(
           <NumericFormat
             disabled={RepeatedInputDisabled(repeated)}
             className="fm-control mr-5 align-center"
-            style={{ width: '80px' }}
+            style={{ width: "80px" }}
             value={repeatedInput}
             allowLeadingZeros={false} //0부터 시작
             allowNegative={false} //음수
@@ -686,18 +690,18 @@ export const ScheduleInformationRepeatedInput = React.memo(
             type="text"
             onValueChange={({ floatValue }) => {
               if (floatValue) RepeatedInputHandleChange(floatValue);
-              else RepeatedInputHandleChange('');
+              else RepeatedInputHandleChange("");
             }}
           />
           <select
             className="fm-control"
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
             value={repeated}
             onChange={RepeatedHandleChange}
           >
-            <option value={'00'}>반복 안 함</option>
-            <option value={'01'}>주</option>
-            <option value={'02'}>개월</option>
+            <option value={"00"}>반복 안 함</option>
+            <option value={"01"}>주</option>
+            <option value={"02"}>개월</option>
             {/* <option value={'year'}>년</option> */}
           </select>
         </div>
@@ -709,31 +713,31 @@ export const ScheduleInformationRepeatedInput = React.memo(
               {RepeatedWeekOptionInputOpen(repeated) && (
                 <select
                   className="fm-control mr-5"
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                   value={week}
                   onChange={WeekHandleChange}
                 >
-                  <option value={'1'}>첫째 주</option>
-                  <option value={'2'}>둘째 주</option>
-                  <option value={'3'}>셋째 주</option>
-                  <option value={'4'}>넷째 주</option>
-                  <option value={'5'}>다섯째 주</option>
+                  <option value={"1"}>첫째 주</option>
+                  <option value={"2"}>둘째 주</option>
+                  <option value={"3"}>셋째 주</option>
+                  <option value={"4"}>넷째 주</option>
+                  <option value={"5"}>다섯째 주</option>
                 </select>
               )}
               {RepeatedDayofweekOptionInputOpen(repeated) && (
                 <select
                   className="fm-control"
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                   value={dayofweek}
                   onChange={DayofweekHandleChange}
                 >
-                  <option value={'0'}>일요일</option>
-                  <option value={'1'}>월요일</option>
-                  <option value={'2'}>화요일</option>
-                  <option value={'3'}>수요일</option>
-                  <option value={'4'}>목요일</option>
-                  <option value={'5'}>금요일</option>
-                  <option value={'6'}>토요일</option>
+                  <option value={"0"}>일요일</option>
+                  <option value={"1"}>월요일</option>
+                  <option value={"2"}>화요일</option>
+                  <option value={"3"}>수요일</option>
+                  <option value={"4"}>목요일</option>
+                  <option value={"5"}>금요일</option>
+                  <option value={"6"}>토요일</option>
                 </select>
               )}
             </div>
@@ -741,7 +745,7 @@ export const ScheduleInformationRepeatedInput = React.memo(
         )}
       </td>
     );
-  },
+  }
 );
 
 export const ScheduleInformation = React.memo(function ScheduleInformation({
@@ -749,9 +753,9 @@ export const ScheduleInformation = React.memo(function ScheduleInformation({
 }) {
   return (
     <>
-      <Tab title={'예약정보'} />
+      <Tab title={"예약정보"} />
       <div id="schedule-thum-default" className="tabcontent">
-        <table className="tbl tbl-basic" style={{ width: '100%' }}>
+        <table className="tbl tbl-basic" style={{ width: "100%" }}>
           <colgroup>
             <col width="13%" />
             <col width="37%" />
@@ -782,11 +786,11 @@ export const ScheduleInformation = React.memo(function ScheduleInformation({
                   Object.keys(scheduleInfo)?.length > 0
                     ? {
                         repeatedInput:
-                          scheduleInfo[SCHEDULE_KEY_SCHEDULETYPE] === '01'
+                          scheduleInfo[SCHEDULE_KEY_SCHEDULETYPE] === "01"
                             ? scheduleInfo[SCHEDULE_KEY_REPEATCYCLEWEEK]
-                            : scheduleInfo[SCHEDULE_KEY_SCHEDULETYPE] === '02'
+                            : scheduleInfo[SCHEDULE_KEY_SCHEDULETYPE] === "02"
                             ? scheduleInfo[SCHEDULE_KEY_REPEATCYCLEMONTH]
-                            : '',
+                            : "",
                         repeated: scheduleInfo[SCHEDULE_KEY_SCHEDULETYPE],
                         week: scheduleInfo[SCHEDULE_KEY_REPEATCYCLEWEEK],
                         dayofweek: scheduleInfo[SCHEDULE_KEY_REPEATCYCLEDAY],
@@ -813,7 +817,7 @@ export const HostInformation = React.memo(function HostInformation() {
       revalidateOnFocus: false, //창이 포커싱되었을 때 자동 갱신 방지
       revalidateOnReconnect: false, //브라우저가 네트워크 연결을 다시 얻었을 때 자동으로 갱신
     },
-    selectSubscription,
+    selectSubscription
   );
 
   const GetHostList = async (result) => {
@@ -882,9 +886,9 @@ export const HostInformation = React.memo(function HostInformation() {
 
   return (
     <>
-      <Tab title={'호스트정보'} />
+      <Tab title={"호스트정보"} />
       <div id="schedule-thum-host" className="tabcontent">
-        <table className="tbl tbl-basic tbl-tiny" style={{ width: '100%' }}>
+        <table className="tbl tbl-basic tbl-tiny" style={{ width: "100%" }}>
           <colgroup>
             <col width="8%" />
             <col width="25%" />
@@ -932,7 +936,7 @@ export const EditHostInformation = React.memo(function EditHostInformation({
       revalidateOnFocus: false, //창이 포커싱되었을 때 자동 갱신 방지
       revalidateOnReconnect: false, //브라우저가 네트워크 연결을 다시 얻었을 때 자동으로 갱신
     },
-    selectSubscription,
+    selectSubscription
   );
 
   const GetHostList = async (result) => {
@@ -1010,9 +1014,9 @@ export const EditHostInformation = React.memo(function EditHostInformation({
 
   return (
     <>
-      <Tab title={'호스트정보'} />
+      <Tab title={"호스트정보"} />
       <div id="schedule-thum-host" className="tabcontent">
-        <table className="tbl tbl-basic tbl-tiny" style={{ width: '100%' }}>
+        <table className="tbl tbl-basic tbl-tiny" style={{ width: "100%" }}>
           <colgroup>
             <col width="8%" />
             <col width="25%" />
@@ -1063,7 +1067,7 @@ export const ScheduleRefreshButton = React.memo(
         </button>
       </>
     );
-  },
+  }
 );
 
 ScheduleLogItem.propTypes = {
