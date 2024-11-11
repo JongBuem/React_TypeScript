@@ -19,17 +19,13 @@ import {
   MONITORING_VM_KEY_STATUSES_DISPLAYSTATUS,
   MONITORING_vm_STATUSES_KEY,
   MONITORING_VM_STATUSES_RUNNING,
-} from 'common/constants/monitoring.constant';
+} from "common/constants/monitoring.constant";
 
 export class MonitoringHostDATA {
   constructor(result) {
-    this.data = Array.isArray(result?.data) ? result?.data : [];
-    this._new = Array.isArray(result?.data?.newHosts)
-      ? result?.data?.newHosts
-      : [];
-    this._old = Array.isArray(result?.data?.oldHosts)
-      ? result?.data?.oldHosts
-      : [];
+    this.data = Array.isArray(result) ? result : [];
+    this._new = Array.isArray(result?.newHosts) ? result?.newHosts : [];
+    this._old = Array.isArray(result?.oldHosts) ? result?.oldHosts : [];
   }
 
   get new() {
@@ -48,7 +44,7 @@ export class MonitoringHostDATA {
     return result;
   }
 
-  getValue(keys = [], value = {}, defaultValue = '') {
+  getValue(keys = [], value = {}, defaultValue = "") {
     try {
       let tempObj = {};
       for (const i of keys) {
@@ -67,7 +63,7 @@ export class MonitoringHostDATA {
     const name = this.getValue([MONITORING_HOST_KEY_NAME], objValue);
     const skuName = this.getValue(
       [MONITORING_HOST_KEY_SKU, MONITORING_HOST_KEY_SKU_NAME],
-      objValue,
+      objValue
     );
     const statuses = this.getValue(
       [
@@ -76,12 +72,12 @@ export class MonitoringHostDATA {
         MONITORING_HOST_KEY_STATUSES,
       ],
       objValue,
-      [{}],
+      [{}]
     );
     const virtualMachines = this.getValue(
       [MONITORING_HOST_KEY_PROPERTIES, MONITORING_HOST_KEY_VIRTUALMACHINES],
       objValue,
-      [],
+      []
     );
 
     return {
@@ -125,7 +121,7 @@ export class MonitoringVmDATA extends MonitoringHostDATA {
         MONITORING_VM_KEY_STATUSES,
       ],
       objValue,
-      [{}],
+      [{}]
     );
     return {
       [MONITORING_VM_KEY_ID]: id,
@@ -161,7 +157,7 @@ export class MonitoringData {
     const result = parentArray.map((v) => {
       const virtualMachines = this.gethostVm(
         v[MONITORING_HOST_KEY_VIRTUALMACHINES],
-        childArray,
+        childArray
       );
       return {
         ...v,
@@ -187,7 +183,7 @@ export class MonitoringData {
     if (division)
       return this.arrayDivision(
         result,
-        Math.abs(Math.round(result?.length / 2)),
+        Math.abs(Math.round(result?.length / 2))
       );
     return result;
   }
@@ -202,14 +198,14 @@ export class MonitoringStatus {
   gethostAvailable(array) {
     const result = array.filter(
       (v) =>
-        v[MONITORING_HOST_KEY_STATUSES] === MONITORING_HOST_STATUSES_AVAILABLE,
+        v[MONITORING_HOST_KEY_STATUSES] === MONITORING_HOST_STATUSES_AVAILABLE
     ).length;
     return result;
   }
 
   getVmRunning(array) {
     const result = array.filter(
-      (v) => v[MONITORING_VM_KEY_STATUSES] === MONITORING_VM_STATUSES_RUNNING,
+      (v) => v[MONITORING_VM_KEY_STATUSES] === MONITORING_VM_STATUSES_RUNNING
     ).length;
     return result;
   }
