@@ -47,7 +47,7 @@ function wrapInArray<T>(item: T): Array<T> {
 const wrappedItem = wrapInArray({ id: "123" });
 ```
 
-- 11월 09일
+- 11월 11일
   - 진행 파일: pages/schedule/index.tsx, CmwApis.ts
   - type과 interface는 상속이 가능하다.
 
@@ -151,3 +151,7 @@ interface Grades {
 
 }
 ```
+
+- 11월 12일
+  - 진행 파일: pages/monitoring/index.tsx
+  - 아키텍처변경: 도메인별 기능 아키텍처로 변경
