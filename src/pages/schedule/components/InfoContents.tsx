@@ -1,7 +1,6 @@
 import React from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 import { CustomTab } from "./Tab";
 import { useParams } from "react-router";
 import calendar from "assets/images/calendar.png";
@@ -11,10 +10,11 @@ import { scheduleListStore } from "global/schedule";
 import { GetScheduleInfo } from "pages/schedule";
 import { ScheduleInfo } from "common/class/schedule";
 import {
-  ScheduleData,
   SCHEDULE_KEY_NAME,
   SCHEDULE_KEY_STATE,
 } from "common/constants/schedule.constant";
+
+import { ScheduleData } from "../types";
 
 export default function InfoContents() {
   console.log("info");
@@ -121,6 +121,3 @@ export default function InfoContents() {
     );
   }
 }
-InfoContents.propTypes = {
-  buttonState: PropTypes.func,
-};

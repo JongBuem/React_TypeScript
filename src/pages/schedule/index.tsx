@@ -3,10 +3,7 @@ import { Outlet } from "react-router-dom";
 import HeadContents from "components/schedule/HeadContents";
 import LeftContents from "components/schedule/LeftContents";
 import { useAxiosSwr, getAPI, postAPI, patchAPI } from "common/api/CmwApi";
-import {
-  ScheduleData,
-  GetScheduleInfoData,
-} from "common/constants/schedule.constant";
+import { ScheduleData, GetScheduleInfoData } from "./types";
 
 export async function GetScheduleInfo(
   scheduleId: string

@@ -1,21 +1,14 @@
-import React from 'react';
-import moment from 'moment';
-import PropTypes from 'prop-types';
-import { Tabs, Tab, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import React from "react";
+import moment from "moment";
+import { Tabs, Tab, Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import {
   ScheduleHostLog,
   ScheduleLog,
   TabHostLogSelects,
   TabLogSelects,
-} from './Items';
-// import { ScheduleHostDATA } from 'common/class/schedule';
-// import {
-//   MONITORING_HOST_KEY_NAME,
-//   MONITORING_HOST_KEY_SKU,
-//   MONITORING_HOST_KEY_SKU_LOCATION,
-//   MONITORING_HOST_KEY_STATUSES,
-// } from 'common/constants/monitoring.constant';
+} from "../../../components/schedule/Items";
+
 import {
   SCHEDULE_KEY_SUBSID,
   SCHEDULE_KEY_STATE,
@@ -24,7 +17,9 @@ import {
   SCHEDULE_KEY_REPEATCYCLEMONTH,
   SCHEDULE_KEY_REPEATCYCLEWEEK,
   SCHEDULE_KEY_REPEATCYCLEDAY,
-} from 'common/constants/schedule.constant';
+} from "common/constants/schedule.constant";
+
+import { TabPanelProps, CustomTabProps } from "../types/tap";
 
 export const StyledTab = styled(Tab)(() => ({
   width: 100,
@@ -33,29 +28,29 @@ export const StyledTab = styled(Tab)(() => ({
   lineHeight: 1.5,
   fontFamily:
     "'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif",
-  color: '#172b4d',
-  letterSpacing: '-0.2px',
-  textTransform: 'none',
-  '&.MuiButtonBase-root': {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyItems: 'center',
-    justifyContent: 'flex-start',
-    minWidth: '80px',
-    padding: '10px 10px',
+  color: "#172b4d",
+  letterSpacing: "-0.2px",
+  textTransform: "none",
+  "&.MuiButtonBase-root": {
+    display: "flex",
+    flexDirection: "row",
+    justifyItems: "center",
+    justifyContent: "flex-start",
+    minWidth: "80px",
+    padding: "10px 10px",
   },
-  '&.Mui-selected': {
-    color: '#0165CC',
+  "&.Mui-selected": {
+    color: "#0165CC",
   },
-  '&.MuiTab-textColorPrimary': {
-    display: 'flex',
-    justifyContent: 'center',
-    textAlign: 'center',
+  "&.MuiTab-textColorPrimary": {
+    display: "flex",
+    justifyContent: "center",
+    textAlign: "center",
   },
 }));
 
-export const TabPanel = (props) => {
-  const { children, value, index, ...other } = props;
+export const TabPanel = ({ children, value, index }: TabPanelProps) => {
+  // const { children, value, index, other } = props;
 
   return (
     <div
@@ -63,26 +58,25 @@ export const TabPanel = (props) => {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      style={{ borderTop: '1px solid #000' }}
-      {...other}
+      style={{ borderTop: "1px solid #000" }}
+      // {...other}
     >
       {value === index && <Box>{children}</Box>}
     </div>
   );
 };
 
-export const CustomTab = ({ id, scheduleData, hostData }) => {
-  // const hostInstance = new ScheduleHostDATA({ data: hostData });
-  // const hostlist = hostInstance.init(hostInstance.data);
-  const [value, setValue] = React.useState(0); //tab 위치
-  const tabhandleChange = (e, index) => {
+export const CustomTab = ({ id, scheduleData, hostData }: CustomTabProps) => {
+  console.log(id, scheduleData, hostData);
+  const [value, setValue] = React.useState<number>(0); //tab 위치
+  const tabhandleChange = (e: React.SyntheticEvent, index: number) => {
     setValue(index); //tab 위치 변경
   };
 
-  const a11yProps = (index) => {
+  const a11yProps = (index: number) => {
     return {
       id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
     };
   };
 
@@ -94,11 +88,11 @@ export const CustomTab = ({ id, scheduleData, hostData }) => {
         aria-label="basic tabs example"
         TabIndicatorProps={{
           style: {
-            display: 'none',
+            display: "none",
           },
         }}
       >
-        {['예약정보', '호스트정보', '예약로그'].map((item, index) => (
+        {["예약정보", "호스트정보", "예약로그"].map((item, index) => (
           <StyledTab
             key={index}
             disableRipple
@@ -110,7 +104,7 @@ export const CustomTab = ({ id, scheduleData, hostData }) => {
 
       <TabPanel value={value} index={0}>
         <div className="tabcontent">
-          <table className="tbl tbl-basic" style={{ width: '100%' }}>
+          <table className="tbl tbl-basic" style={{ width: "100%" }}>
             <colgroup>
               <col width="10%" />
               <col width="35%" />
@@ -138,13 +132,13 @@ export const CustomTab = ({ id, scheduleData, hostData }) => {
                 <td className="align-center">
                   {scheduleData[SCHEDULE_KEY_STARTDATETIME].length > 0 &&
                     moment(scheduleData[SCHEDULE_KEY_STARTDATETIME]).format(
-                      'YYYY-MM-DD',
+                      "YYYY-MM-DD"
                     )}
                 </td>
                 <td className="align-center">
                   {scheduleData[SCHEDULE_KEY_STARTDATETIME].length > 0 &&
                     moment(scheduleData[SCHEDULE_KEY_STARTDATETIME]).format(
-                      'hh:mm a',
+                      "hh:mm a"
                     )}
                 </td>
                 <td className="align-center">
@@ -158,7 +152,7 @@ export const CustomTab = ({ id, scheduleData, hostData }) => {
           </table>
         </div>
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         <TabHostLogSelects index={1} />
         <ScheduleHostLog id={id} />
       </TabPanel>
@@ -167,18 +161,7 @@ export const CustomTab = ({ id, scheduleData, hostData }) => {
           <TabLogSelects index={2} />
           <ScheduleLog id={id} />
         </div>
-      </TabPanel>
+      </TabPanel> */}
     </>
   );
-};
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-CustomTab.propTypes = {
-  id: PropTypes.string,
-  scheduleData: PropTypes.object,
-  hostData: PropTypes.array,
 };

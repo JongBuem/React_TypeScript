@@ -20,7 +20,7 @@ import moment from "moment";
 import clsx from "clsx";
 import { Loading } from "components/item/Loading";
 import { GetScheduleInfo } from "pages/schedule";
-import { ScheduleData } from "common/constants/schedule.constant";
+import { ScheduleData } from "../types";
 
 interface RegistrationButtonProps {
   id: string | null;
