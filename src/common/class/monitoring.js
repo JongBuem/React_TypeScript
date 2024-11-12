@@ -23,9 +23,13 @@ import {
 
 export class MonitoringHostDATA {
   constructor(result) {
-    this.data = Array.isArray(result) ? result : [];
-    this._new = Array.isArray(result?.newHosts) ? result?.newHosts : [];
-    this._old = Array.isArray(result?.oldHosts) ? result?.oldHosts : [];
+    this.data = Array.isArray(result?.data) ? result?.data : [];
+    this._new = Array.isArray(result?.data?.newHosts)
+      ? result?.data?.newHosts
+      : [];
+    this._old = Array.isArray(result?.data?.oldHosts)
+      ? result?.data?.oldHosts
+      : [];
   }
 
   get new() {

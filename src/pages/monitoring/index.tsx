@@ -10,11 +10,23 @@ import {
 import { monitoringHostStore, monitoringVmStore } from "global/monitoring";
 import { customerStore } from "global/customer";
 import { useAxiosSwr } from "common/api/CmwApi";
+import { SWRResponse } from "swr";
+import {
+  GetHostParameter,
+  GetHostReturnType,
+  GetVmParameter,
+  GetVmReturnType,
+} from "./types";
 
-export function GetHost(refreshInterval, subscriptionId, query) {
+export function GetHost({
+  refreshInterval,
+  subscriptionId,
+  query,
+}: GetHostParameter): GetHostReturnType {
   const value = query ? "true" : "false";
+  const url = `/monitoring/host-info/${subscriptionId}?filter=${value}`;
   const { data, error, isValidating, mutate, isLoading } = useAxiosSwr(
-    `/monitoring/host-info/${subscriptionId}?filter=${value}`,
+    url,
     null,
     refreshInterval
   );
@@ -27,7 +39,10 @@ export function GetHost(refreshInterval, subscriptionId, query) {
   };
 }
 
-export function GetVm(refreshInterval, subscriptionId) {
+export function GetVm({
+  refreshInterval,
+  subscriptionId,
+}: GetVmParameter): GetVmReturnType {
   const { data, error, isValidating, mutate, isLoading } = useAxiosSwr(
     `/monitoring/vm-info/${subscriptionId}`,
     null,
@@ -50,15 +65,15 @@ export default function Monitoring() {
   const [dataList, setDataList] = React.useState([]);
   const { host, setHost } = monitoringHostStore();
   const { vm, setVm } = monitoringVmStore();
-  const { data: hostList, isLoading: hostListLoading } = GetHost(
-    10000,
-    subscriptionId,
-    true
-  );
-  const { data: vmList, isLoading: vmListLoading } = GetVm(
-    10000,
-    subscriptionId
-  );
+  const { data: hostList, isLoading: hostListLoading } = GetHost({
+    refreshInterval: 10000,
+    subscriptionId: subscriptionId,
+    query: true,
+  });
+  const { data: vmList, isLoading: vmListLoading } = GetVm({
+    refreshInterval: 10000,
+    subscriptionId: subscriptionId,
+  });
 
   // const DataList = React.useMemo(() => {
   //   const dataInstance = new MonitoringData(host, vm);
@@ -73,19 +88,15 @@ export default function Monitoring() {
       true
     );
     return dataList;
-  });
+  }, [host, vm]);
 
-  const GetHostList = async (result) => {
+  const GetHostList = async (result: SWRResponse) => {
     const hostInstance = new MonitoringHostDATA(result);
     const hostlist = hostInstance.init(hostInstance.host);
-    // const hostlist = hostInstance.init(hostInstance.data);
-    // //임시 정렬 코드
-    // const test = hostlist.sort((a, b) => a.name.localeCompare(b.name));
-    // setHost(test);
     setHost(hostlist);
   };
 
-  const GetVmList = async (result) => {
+  const GetVmList = async (result: SWRResponse) => {
     const vmInstance = new MonitoringVmDATA(result);
     const vmlist = vmInstance.init(vmInstance.data);
     setVm(vmlist);
