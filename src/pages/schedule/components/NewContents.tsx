@@ -4,7 +4,7 @@ import { customerStore } from "global/customer";
 import { scheduleListStore } from "global/schedule";
 import { adProfileStore } from "global/profile";
 import { GetSchedule, PostSchedule } from "pages/schedule";
-import { TitleInput, ScheduleInformation, HostInformation } from "./Items";
+import { TitleInput, ScheduleInformation, HostInformation } from "./Item";
 import {
   loadingStore,
   titleStore,
@@ -17,8 +17,7 @@ import {
 import { Loading } from "components/item/Loading";
 import moment from "moment";
 import clsx from "clsx";
-
-import { ScheduleData } from "common/constants/schedule.constant";
+import { ScheduleData } from "../types";
 
 function RegistrationButton() {
   const navigate = useNavigate();
@@ -120,14 +119,14 @@ function NewContents() {
             <tbody>
               <tr>
                 <td className="align-center">
-                  <TitleInput />
+                  <TitleInput scheduleInfo={null} />
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
         <div className="space-20"></div>
-        <ScheduleInformation />
+        <ScheduleInformation scheduleInfo={null} />
         <div className="space-20"></div>
         {loading ? <Loading /> : <HostInformation />}
       </div>

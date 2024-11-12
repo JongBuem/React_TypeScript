@@ -1,5 +1,6 @@
 import React from "react";
 import moment from "moment";
+import { SWRResponse } from "swr";
 import { GetHost } from "pages/monitoring";
 import { ScheduleHostLogDATA } from "common/class/log";
 import { ScheduleHostDATA } from "common/class/schedule";
@@ -23,7 +24,6 @@ import {
 } from "global/schedule";
 import { customerStore } from "global/customer";
 import {
-  ScheduleData,
   SCHEDULE_KEY_NAME,
   SCHEDULE_KEY_SUBSID,
   SCHEDULE_KEY_STATE,
@@ -42,33 +42,16 @@ import {
   MONITORING_HOST_KEY_STATUSES,
 } from "common/constants/monitoring.constant";
 
-interface ScheduleInfoProps {
-  scheduleInfo: ScheduleData | null;
-}
-interface TapProps {
-  title: string;
-}
-interface ScheduleInformationStatusInputInputProps {
-  value: boolean;
-}
-interface ScheduleInformationSubscriptionInputInputProps {
-  value: string;
-}
-interface ScheduleInformationDateInputInputProps {
-  value: string | object | Date;
-}
-interface ScheduleInformationRepeatedInputValue {
-  repeatedInput: string | number;
-  repeated: string;
-  week: number | string;
-  dayofweek: number | string;
-}
-interface ScheduleInformationRepeatedInputProps {
-  value: ScheduleInformationRepeatedInputValue;
-}
-interface EditHostInformationProps {
-  scheduleInfo: ScheduleData | null;
-}
+import {
+  ScheduleInfoProps,
+  TapProps,
+  ScheduleInformationStatusInputInputProps,
+  ScheduleInformationSubscriptionInputInputProps,
+  ScheduleInformationDateInputInputProps,
+  ScheduleInformationRepeatedInputValue,
+  ScheduleInformationRepeatedInputProps,
+  EditHostInformationProps,
+} from "../types/items";
 
 export const Tab = React.memo(function Tab({ title }: TapProps) {
   return (
@@ -536,15 +519,13 @@ export const EditHostInformation = React.memo(function EditHostInformation({
   const [allCheck, setAllCheck] = React.useState(false);
   const [check, setCheck] = React.useState<Array<string>>([]);
   const [hostList, setHostList] = React.useState([]);
-  const { data, isLoading, isError } = GetHost(
-    {
-      revalidateOnFocus: false, //창이 포커싱되었을 때 자동 갱신 방지
-      revalidateOnReconnect: false, //브라우저가 네트워크 연결을 다시 얻었을 때 자동으로 갱신
-    },
-    selectSubscription
-  );
+  const { data, isLoading, isError } = GetHost({
+    refreshInterval: 70000,
+    subscriptionId: selectSubscription,
+    query: false,
+  });
 
-  const GetHostList = async (result: any) => {
+  const GetHostList = async (result: SWRResponse | []) => {
     const hostInstance = new ScheduleHostDATA(result);
     const hostlist = hostInstance.init(hostInstance.data);
     setHostList(hostlist);
@@ -587,6 +568,124 @@ export const EditHostInformation = React.memo(function EditHostInformation({
       setScheduleInfoCheck(true);
     }
   }, [scheduleInfo?.targetHostList]);
+
+  const ChekHandler = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    value: string
+  ) => {
+    if (e.target.checked) setCheck((check) => [...check, value]);
+    else {
+      setCheck(check.filter((o) => o !== value));
+      setAllCheck(false);
+    }
+  };
+
+  const subscriptions: monitoringData[] = hostList;
+  const HostTableList = subscriptions.map((value, index) => (
+    <tr key={value?.id ?? index}>
+      <td className="align-center">
+        <label className="checkbox">
+          <input
+            type="checkbox"
+            name="selectRow"
+            onChange={(e) => ChekHandler(e, value[MONITORING_HOST_KEY_NAME])}
+            checked={
+              check.indexOf(value[MONITORING_HOST_KEY_NAME]) > -1 ? true : false
+            }
+          />
+          <span className="mark"></span>
+        </label>
+      </td>
+      <td className="align-center">{value[MONITORING_HOST_KEY_NAME]}</td>
+      <td className="align-center">{value[MONITORING_HOST_KEY_SKU]}</td>
+      <td className="align-center">
+        {value[MONITORING_HOST_KEY_SKU_LOCATION]}
+      </td>
+      <td className="align-center">{value[MONITORING_HOST_KEY_STATUSES]}</td>
+    </tr>
+  ));
+
+  return (
+    <>
+      <Tab title={"호스트정보"} />
+      <div id="schedule-thum-host" className="tabcontent">
+        <table className="tbl tbl-basic tbl-tiny" style={{ width: "100%" }}>
+          <colgroup>
+            <col width="8%" />
+            <col width="25%" />
+            <col width="25%" />
+            <col width="25%" />
+            <col width="" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    name="selectRow"
+                    onChange={(e) => setAllCheck(e.target.checked)}
+                    checked={allCheck}
+                  />
+                  <span className="mark"></span>
+                </label>
+              </th>
+              <th>Host Name</th>
+              <th>SKU</th>
+              <th>Location</th>
+              <th>Statuses</th>
+            </tr>
+          </thead>
+          <tbody>{HostTableList}</tbody>
+        </table>
+      </div>
+    </>
+  );
+});
+
+export const HostInformation = React.memo(function HostInformation() {
+  const { selectSubscription } = subscriptionStore();
+  const { setNewCheckHostList } = hostStore();
+  const [allCheck, setAllCheck] = React.useState(true);
+  const [check, setCheck] = React.useState<any[]>([]);
+  const [hostList, setHostList] = React.useState([]);
+  const { data, isLoading, isError } = GetHost({
+    refreshInterval: 70000,
+    subscriptionId: selectSubscription,
+    query: false,
+  });
+
+  const GetHostList = async (result: SWRResponse | []) => {
+    const hostInstance = new ScheduleHostDATA(result);
+    const hostlist = hostInstance.init(hostInstance.data);
+    setHostList(hostlist);
+  };
+
+  //초기화
+  React.useEffect(() => {
+    setNewCheckHostList([]);
+  }, []);
+
+  React.useEffect(() => {
+    setNewCheckHostList(check);
+  }, [check]);
+
+  React.useEffect(() => {
+    if (isError) GetHostList([]);
+    else if (!isLoading && !isError && data) GetHostList(data);
+  }, [isLoading, data, isError]);
+
+  React.useEffect(() => {
+    if (check?.length === hostList?.length) setAllCheck(true);
+  }, [check, hostList]);
+
+  React.useEffect(() => {
+    if (allCheck && hostList?.length > 0)
+      setCheck(hostList.map((v) => v[MONITORING_HOST_KEY_NAME]));
+    else if (!allCheck && hostList?.length > 0) {
+      if (hostList?.length === check?.length) setCheck([]);
+    } else if (hostList?.length === 0) setCheck([]);
+  }, [allCheck, hostList]);
 
   const ChekHandler = async (
     e: React.ChangeEvent<HTMLInputElement>,
