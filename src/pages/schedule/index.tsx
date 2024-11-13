@@ -1,9 +1,14 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import HeadContents from "components/schedule/HeadContents";
-import LeftContents from "components/schedule/LeftContents";
+import HeadContents from "./components/HeadContents";
+import LeftContents from "./components/LeftContents";
 import { useAxiosSwr, getAPI, postAPI, patchAPI } from "common/api/CmwApi";
-import { ScheduleData, GetScheduleInfoData } from "./types";
+import {
+  ScheduleData,
+  GetScheduleInfoData,
+  GetScheduleLogParameter,
+  GetScheduleLogType,
+} from "./types";
 
 export async function GetScheduleInfo(
   scheduleId: string
@@ -50,11 +55,11 @@ export async function PatchSchedule(
     .catch(() => false);
 }
 
-export const GetScheduleLog = (
-  customerId: string,
-  scheduleID: string,
-  refreshInterval: number
-) => {
+export const GetScheduleLog = ({
+  customerId,
+  scheduleID,
+  refreshInterval,
+}: GetScheduleLogParameter): GetScheduleLogType => {
   const { data, error, mutate, isLoading } = useAxiosSwr(
     `/logs/${customerId}/schedules/${scheduleID}`,
     null,

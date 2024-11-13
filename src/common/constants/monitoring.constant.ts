@@ -26,11 +26,3 @@ export const MONITORING_VM_STATUSES_STOPPING = "VM stopping";
 export const MONITORING_VM_STATUSES_STOPPED = "VM stopped";
 export const MONITORING_VM_STATUSES_DEALLOCATED = "VM deallocated";
 export const MONITORING_VM_STATUSES_DEALLOCATING = "VM deallocating";
-
-export interface monitoringData {
-  id: string;
-  name: string;
-  sku: Array<any>;
-  location: string;
-  statuses: string;
-}

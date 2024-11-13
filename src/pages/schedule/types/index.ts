@@ -73,3 +73,16 @@ export interface ScheduleAllData {
 export interface GetScheduleInfoData extends ScheduleData {
   host: HostData;
 }
+
+export type GetScheduleLogParameter = {
+  customerId: string;
+  scheduleID: string;
+  refreshInterval: number;
+};
+
+export type GetScheduleLogType = {
+  mutate: any;
+  data: any;
+  isLoading: boolean;
+  isError: any;
+};

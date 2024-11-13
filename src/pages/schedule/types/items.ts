@@ -27,3 +27,7 @@ export interface ScheduleInformationRepeatedInputProps {
 export interface EditHostInformationProps {
   scheduleInfo: ScheduleData | null;
 }
+
+export interface ScheduleHostLogProps {
+  id: string;
+}

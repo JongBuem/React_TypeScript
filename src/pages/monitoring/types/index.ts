@@ -1,3 +1,11 @@
+export interface MonitoringData {
+  id: string;
+  name: string;
+  sku: Array<any>;
+  location: string;
+  statuses: string;
+}
+
 export type GetHostParameter = {
   refreshInterval: number;
   subscriptionId: string;
