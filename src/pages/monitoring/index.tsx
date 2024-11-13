@@ -91,13 +91,15 @@ export default function Monitoring() {
   }, [host, vm]);
 
   const GetHostList = async (result: SWRResponse) => {
-    const hostInstance = new MonitoringHostDATA(result);
+    const dataArray = result.data ? result : { data: result };
+    const hostInstance = new MonitoringHostDATA(dataArray);
     const hostlist = hostInstance.init(hostInstance.host);
     setHost(hostlist);
   };
 
   const GetVmList = async (result: SWRResponse) => {
-    const vmInstance = new MonitoringVmDATA(result);
+    const dataArray = result.data ? result : { data: result };
+    const vmInstance = new MonitoringVmDATA(dataArray);
     const vmlist = vmInstance.init(vmInstance.data);
     setVm(vmlist);
   };
