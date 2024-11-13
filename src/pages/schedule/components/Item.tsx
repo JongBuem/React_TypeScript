@@ -35,13 +35,25 @@ import {
   SCHEDULE_KEY_REPEATCYCLEDAY,
 } from "common/constants/schedule.constant";
 import {
-  monitoringData,
   MONITORING_HOST_KEY_NAME,
   MONITORING_HOST_KEY_SKU,
   MONITORING_HOST_KEY_SKU_LOCATION,
   MONITORING_HOST_KEY_STATUSES,
 } from "common/constants/monitoring.constant";
-
+import {
+  LogData,
+  ViewLogData,
+  LOG_KEY_ACTION,
+  LOG_KEY_STATUS,
+  LOG_KEY_JOBCOUNT,
+  LOG_KEY_HOSTINFO,
+  LOG_KEY_CREATEDAT,
+  LOG_KEY_DESCRIPTION,
+  LOG_HOST_KEY_SKU,
+  LOG_HOST_KEY_LOCATION,
+  LOG_HOST_KEY_OLDNAME,
+  LOG_HOST_KEY_NEWNAME,
+} from "common/constants/log.constant";
 import {
   ScheduleInfoProps,
   TapProps,
@@ -51,7 +63,10 @@ import {
   ScheduleInformationRepeatedInputValue,
   ScheduleInformationRepeatedInputProps,
   EditHostInformationProps,
+  ScheduleHostLogProps,
 } from "../types/items";
+import { GetScheduleLog, GetSchedule } from "pages/schedule";
+import { MonitoringData } from "pages/monitoring/types/index";
 
 export const Tab = React.memo(function Tab({ title }: TapProps) {
   return (
@@ -525,8 +540,9 @@ export const EditHostInformation = React.memo(function EditHostInformation({
     query: false,
   });
 
-  const GetHostList = async (result: SWRResponse | []) => {
-    const hostInstance = new ScheduleHostDATA(result);
+  const GetHostList = async (result: SWRResponse) => {
+    const dataArray = result.data ? result : { data: result };
+    const hostInstance = new ScheduleHostDATA(dataArray);
     const hostlist = hostInstance.init(hostInstance.data);
     setHostList(hostlist);
   };
@@ -541,7 +557,7 @@ export const EditHostInformation = React.memo(function EditHostInformation({
   }, [check]);
 
   React.useEffect(() => {
-    if (isError) GetHostList([]);
+    if (isError) setHostList([]);
     else if (!isLoading && !isError && data) GetHostList(data);
   }, [isLoading, data, isError]);
 
@@ -580,7 +596,7 @@ export const EditHostInformation = React.memo(function EditHostInformation({
     }
   };
 
-  const subscriptions: monitoringData[] = hostList;
+  const subscriptions: MonitoringData[] = hostList;
   const HostTableList = subscriptions.map((value, index) => (
     <tr key={value?.id ?? index}>
       <td className="align-center">
@@ -655,8 +671,9 @@ export const HostInformation = React.memo(function HostInformation() {
     query: false,
   });
 
-  const GetHostList = async (result: SWRResponse | []) => {
-    const hostInstance = new ScheduleHostDATA(result);
+  const GetHostList = async (result: SWRResponse) => {
+    const dataArray = result.data ? result : { data: result };
+    const hostInstance = new ScheduleHostDATA(dataArray);
     const hostlist = hostInstance.init(hostInstance.data);
     setHostList(hostlist);
   };
@@ -671,7 +688,7 @@ export const HostInformation = React.memo(function HostInformation() {
   }, [check]);
 
   React.useEffect(() => {
-    if (isError) GetHostList([]);
+    if (isError) setHostList([]);
     else if (!isLoading && !isError && data) GetHostList(data);
   }, [isLoading, data, isError]);
 
@@ -698,7 +715,7 @@ export const HostInformation = React.memo(function HostInformation() {
     }
   };
 
-  const subscriptions: monitoringData[] = hostList;
+  const subscriptions: MonitoringData[] = hostList;
   const HostTableList = subscriptions.map((value, index) => (
     <tr key={value?.id ?? index}>
       <td className="align-center">
@@ -755,6 +772,129 @@ export const HostInformation = React.memo(function HostInformation() {
             </tr>
           </thead>
           <tbody>{HostTableList}</tbody>
+        </table>
+      </div>
+    </>
+  );
+});
+
+export const ScheduleRefreshButton = React.memo(
+  function ScheduleRefreshButton() {
+    const { customer } = customerStore();
+    const { setScheduleList } = scheduleListStore();
+
+    const RefreshButton = async () => {
+      const result = await GetSchedule(customer.tenantId);
+      setScheduleList(result);
+    };
+
+    return (
+      <>
+        <button className="btn btn-solid" onClick={() => RefreshButton()}>
+          새로고침
+        </button>
+      </>
+    );
+  }
+);
+
+export const ScheduleHostLog = React.memo(function ScheduleHostLog({
+  id,
+}: ScheduleHostLogProps) {
+  const { customer } = customerStore();
+  const { setScheduleHostLog, scheduleHostLog, jobCount } =
+    scheduleHostLogStore();
+  const { data, isLoading, isError } = GetScheduleLog({
+    customerId: customer.tenantId,
+    scheduleID: id,
+    refreshInterval: 5000,
+  });
+  const [log, setLog] = React.useState<ViewLogData[]>([]);
+
+  const text = (value: string): string => {
+    const valueArray = value.split("/");
+    const result = valueArray[valueArray.length - 1] ?? "";
+    return result;
+  };
+
+  React.useEffect(() => {
+    if (isError) {
+      setLog([]);
+      setScheduleHostLog([]);
+    } else if (!isLoading && !isError) {
+      setLog(data?.data?.items);
+      setScheduleHostLog(data?.data?.items);
+    }
+  }, [data, isLoading, isError]);
+
+  React.useEffect(() => {
+    const jobCountCheck = (v: LogData): boolean => {
+      if (
+        v[LOG_KEY_JOBCOUNT] === jobCount &&
+        v[LOG_KEY_STATUS] === "Accepted" &&
+        v[LOG_KEY_ACTION] === "10" &&
+        v[LOG_KEY_HOSTINFO]
+      )
+        return true;
+      else return false;
+    };
+
+    const findObj = (array: LogData[], value: string) => {
+      const result = array.find((v) => v.resourceId === value) ?? {};
+      return result;
+    };
+
+    if (scheduleHostLog?.length > 0) {
+      const scheduleHostLogs: LogData[] = scheduleHostLog;
+      const array = scheduleHostLogs.filter((v) => jobCountCheck(v as LogData));
+      const resourceIds: string[] = array.map((v) => v.resourceId);
+      const uniqueResourceIds = [...new Set(resourceIds)];
+      const result = uniqueResourceIds.map((v) => findObj(array, v));
+
+      const hostLogInstance = new ScheduleHostLogDATA(result);
+      const hostLoglist = hostLogInstance.init(hostLogInstance.data);
+      const hostLoglists: ViewLogData[] = hostLoglist;
+      const sortlist = hostLoglists.sort((a, b) =>
+        a[LOG_HOST_KEY_OLDNAME].localeCompare(b[LOG_HOST_KEY_OLDNAME])
+      );
+      setLog(sortlist);
+    }
+  }, [scheduleHostLog, jobCount]);
+
+  return (
+    <>
+      <div className="tabcontent">
+        <table className="tbl tbl-basic" style={{ width: "100%" }}>
+          <colgroup>
+            <col width="25%" />
+            <col width="25%" />
+            <col width="25%" />
+            <col width="25%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Old Host Name</th>
+              <th>New Host Name</th>
+              <th>SKU</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            {log?.map((v, i) => (
+              <tr key={i}>
+                <td className="align-center">
+                  {v[LOG_HOST_KEY_OLDNAME] ?? ""}
+                </td>
+                <td className="align-center">
+                  {text(v[LOG_HOST_KEY_NEWNAME]) ?? ""}
+                </td>
+                <td className="align-center">{v[LOG_HOST_KEY_SKU] ?? ""}</td>
+                <td className="align-center">
+                  {v[LOG_HOST_KEY_LOCATION] ?? ""}
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </>

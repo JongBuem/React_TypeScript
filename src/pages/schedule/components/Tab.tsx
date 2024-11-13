@@ -4,10 +4,10 @@ import { Tabs, Tab, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
   ScheduleHostLog,
-  ScheduleLog,
-  TabHostLogSelects,
-  TabLogSelects,
-} from "../../../components/schedule/Items";
+  // ScheduleLog,
+  // TabHostLogSelects,
+  // TabLogSelects,
+} from "./Item";
 
 import {
   SCHEDULE_KEY_SUBSID,
@@ -67,7 +67,6 @@ export const TabPanel = ({ children, value, index }: TabPanelProps) => {
 };
 
 export const CustomTab = ({ id, scheduleData, hostData }: CustomTabProps) => {
-  console.log(id, scheduleData, hostData);
   const [value, setValue] = React.useState<number>(0); //tab 위치
   const tabhandleChange = (e: React.SyntheticEvent, index: number) => {
     setValue(index); //tab 위치 변경
@@ -152,16 +151,18 @@ export const CustomTab = ({ id, scheduleData, hostData }: CustomTabProps) => {
           </table>
         </div>
       </TabPanel>
-      {/* <TabPanel value={value} index={1}>
-        <TabHostLogSelects index={1} />
-        <ScheduleHostLog id={id} />
+      <TabPanel value={value} index={1}>
+        <div className="tabcontent">
+          {/* <TabHostLogSelects index={1} /> */}
+          <ScheduleHostLog id={id} />
+        </div>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <div className="tabcontent">
-          <TabLogSelects index={2} />
-          <ScheduleLog id={id} />
+          {/* <TabLogSelects index={2} />
+          <ScheduleLog id={id} /> */}
         </div>
-      </TabPanel> */}
+      </TabPanel>
     </>
   );
 };

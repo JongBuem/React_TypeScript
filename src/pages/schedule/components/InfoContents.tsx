@@ -5,7 +5,7 @@ import { CustomTab } from "./Tab";
 import { useParams } from "react-router";
 import calendar from "assets/images/calendar.png";
 import error from "assets/images/error.png";
-import { ScheduleRefreshButton } from "components/schedule/Items";
+import { ScheduleRefreshButton } from "./Item";
 import { scheduleListStore } from "global/schedule";
 import { GetScheduleInfo } from "pages/schedule";
 import { ScheduleInfo } from "common/class/schedule";
@@ -94,7 +94,13 @@ export default function InfoContents() {
             </div>
           </div>
           <div className="space-20"></div>
-          <CustomTab id={id} scheduleData={scheduleData} hostData={hostData} />
+          {id && (
+            <CustomTab
+              id={id}
+              scheduleData={scheduleData}
+              hostData={hostData}
+            />
+          )}
           <div className="space-20"></div>
         </div>
       </div>

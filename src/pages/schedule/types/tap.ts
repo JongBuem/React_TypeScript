@@ -9,7 +9,7 @@ export type TabPanelProps = {
 };
 
 export type CustomTabProps = {
-  id: string | undefined;
+  id: string;
   scheduleData: {
     subscriptionId: string;
     startDateTime: string;
