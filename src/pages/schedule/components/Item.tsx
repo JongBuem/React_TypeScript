@@ -64,6 +64,7 @@ import {
   ScheduleInformationRepeatedInputProps,
   EditHostInformationProps,
   ScheduleHostLogProps,
+  TabHostLogSelectsProps,
 } from "../types/items";
 import { GetScheduleLog, GetSchedule } from "pages/schedule";
 import { MonitoringData } from "pages/monitoring/types/index";
@@ -822,20 +823,15 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
       setLog([]);
       setScheduleHostLog([]);
     } else if (!isLoading && !isError) {
-      setLog(data?.data?.items);
-      setScheduleHostLog(data?.data?.items);
+      const arry = data?.data?.items ? data?.data?.items : data?.items;
+      console.log(arry);
+      setScheduleHostLog(arry);
     }
   }, [data, isLoading, isError]);
 
   React.useEffect(() => {
     const jobCountCheck = (v: LogData): boolean => {
-      if (
-        v[LOG_KEY_JOBCOUNT] === jobCount &&
-        v[LOG_KEY_STATUS] === "Accepted" &&
-        v[LOG_KEY_ACTION] === "10" &&
-        v[LOG_KEY_HOSTINFO]
-      )
-        return true;
+      if (v[LOG_KEY_JOBCOUNT] === jobCount) return true;
       else return false;
     };
 
@@ -847,7 +843,9 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
     if (scheduleHostLog?.length > 0) {
       const scheduleHostLogs: LogData[] = scheduleHostLog;
       const array = scheduleHostLogs.filter((v) => jobCountCheck(v as LogData));
-      const resourceIds: string[] = array.map((v) => v.resourceId);
+      const resourceIds: string[] = array
+        .map((v) => v.resourceId)
+        .filter((v) => v);
       const uniqueResourceIds = [...new Set(resourceIds)];
       const result = uniqueResourceIds.map((v) => findObj(array, v));
 
@@ -880,7 +878,7 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
             </tr>
           </thead>
           <tbody>
-            {log?.map((v, i) => (
+            {log.map((v, i) => (
               <tr key={i}>
                 <td className="align-center">
                   {v[LOG_HOST_KEY_OLDNAME] ?? ""}
@@ -898,5 +896,49 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
         </table>
       </div>
     </>
+  );
+});
+
+export const TabHostLogSelects = React.memo(function TabHostLogSelects({
+  index,
+}: TabHostLogSelectsProps) {
+  const { scheduleHostLog, jobCount, setJobCount } = scheduleHostLogStore();
+
+  const Deduplication = (array: LogData[]) => {
+    const allJobCounts = array.map((v) => v[LOG_KEY_JOBCOUNT]);
+    const jobCounts = [...new Set(allJobCounts)];
+    return jobCounts;
+  };
+
+  const RoundSelectEventHandle = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setJobCount(e.target.value);
+  };
+
+  React.useEffect(() => {
+    const jobCount = Deduplication(scheduleHostLog)[0] ?? 0;
+    setJobCount(jobCount);
+  }, [index, scheduleHostLog]);
+
+  return (
+    <div className="tab-menu-wrap dp-flex p-b-10">
+      <div className="ml-auto p-all-10" style={{ paddingRight: 0 }}>
+        <ul className="fm-group">
+          <li>
+            <select
+              className="fm-control"
+              style={{ width: "100px" }}
+              value={jobCount}
+              onChange={RoundSelectEventHandle}
+            >
+              {Deduplication(scheduleHostLog)?.map((v, i) => (
+                <option key={i} value={v}>
+                  {v}회차
+                </option>
+              ))}
+            </select>
+          </li>
+        </ul>
+      </div>
+    </div>
   );
 });

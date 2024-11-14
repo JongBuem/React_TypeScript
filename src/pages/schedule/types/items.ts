@@ -28,6 +28,10 @@ export interface EditHostInformationProps {
   scheduleInfo: ScheduleData | null;
 }
 
-export interface ScheduleHostLogProps {
+export type ScheduleHostLogProps = {
   id: string;
-}
+};
+
+export type TabHostLogSelectsProps = {
+  index: number;
+};

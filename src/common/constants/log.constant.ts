@@ -7,6 +7,7 @@ export const LOG_KEY_HOSTINFO = "hostInfo";
 export const LOG_KEY_CREATEDAT = "createdAt";
 export const LOG_KEY_RESOURCEID = "resourceId";
 export const LOG_KEY_DESCRIPTION = "description";
+export const LOG_KEY_ERROWMESSAGE = "errorMessage";
 
 export const LOG_HOST_KEY_SKU = "sku";
 export const LOG_HOST_KEY_LOCATION = "location";
@@ -25,7 +26,8 @@ export interface LogData {
   createdAt: string;
   updatedAt: string;
   jobCount: number;
-  hostInfo: MonitoringData;
+  // errorMessage: string; //현재 등록된 두개의 스케줄의 로그가 다름
+  // hostInfo: MonitoringData; //이건뭐지?
 }
 
 export interface ViewLogData {
