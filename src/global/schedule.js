@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export const scheduleListStore = create((set) => ({
   scheduleList: [],
@@ -13,7 +13,7 @@ export const scheduleHostLogStore = create((set) => ({
     set((state) => ({ scheduleHostLog: (state.scheduleHostLog = v) }));
   },
 
-  jobCount: 1,
+  jobCount: 0,
   setJobCount(v) {
     set((state) => ({ jobCount: (state.jobCount = v) }));
   },
@@ -25,17 +25,17 @@ export const scheduleLogStore = create((set) => ({
     set((state) => ({ scheduleLog: (state.scheduleLog = v) }));
   },
 
-  jobCount: 'all',
+  jobCount: "all",
   setJobCount(v) {
     set((state) => ({ jobCount: (state.jobCount = v) }));
   },
 
-  action: 'all',
+  action: "all",
   setAction(v) {
     set((state) => ({ action: (state.action = v) }));
   },
 
-  status: 'all',
+  status: "all",
   setStatus(v) {
     set((state) => ({ status: (state.status = v) }));
   },

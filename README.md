@@ -1,5 +1,10 @@
 # React_TypeScript
 
+- 11월 14일
+
+  - 진행 파일: pages/schedule/components/Tab.tsx, pages/schedule/components/Item.tsx, log.constant.ts
+  - Tab.tsx파일 오류 수정
+
 - 11월 13일
 
   - 진행 파일: pages/schedule/components/Tab.tsx, pages/schedule/components/Item.tsx, log.constant.ts
@@ -27,11 +32,6 @@ export namespace Shapes {
 import * as shapes from "./shapes";
 let t = new shapes.Shapes.Triangle(); // shapes.Shapes?
 ```
-
-- 11월 12일
-
-  - 진행 파일: pages/monitoring/index.tsx
-  - 아키텍처변경: 도메인별 기능 아키텍처로 변경
 
 - 11월 12일
 

@@ -4,8 +4,8 @@ import { Tabs, Tab, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
   ScheduleHostLog,
+  TabHostLogSelects,
   // ScheduleLog,
-  // TabHostLogSelects,
   // TabLogSelects,
 } from "./Item";
 
@@ -153,7 +153,7 @@ export const CustomTab = ({ id, scheduleData, hostData }: CustomTabProps) => {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <div className="tabcontent">
-          {/* <TabHostLogSelects index={1} /> */}
+          <TabHostLogSelects index={1} />
           <ScheduleHostLog id={id} />
         </div>
       </TabPanel>
