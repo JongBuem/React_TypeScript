@@ -1,5 +1,10 @@
 # React_TypeScript
 
+- 11월 17일
+
+  - 진행 파일: schedule.constant.ts, pages/schedule/components/LeftContents.tsx
+  - schedule.constant.ts export를 export default로 변경
+
 - 11월 16일
 
   - 진행 파일: schedule.constant.ts
