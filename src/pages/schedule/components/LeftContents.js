@@ -5,17 +5,13 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { scheduleListStore } from "global/schedule";
 import SimpleBar from "simplebar-react";
-import {
-  SCHEDULE_KEY_ID,
-  SCHEDULE_KEY_NAME,
-  SCHEDULE_KEY_STATE,
-} from "common/constants/schedule.constant";
+import SC from "common/constants/schedule.constant";
 
 export const LeftScheduleList = React.memo(function LeftScheduleList({ info }) {
   const { id } = useParams();
-  const _id = info[SCHEDULE_KEY_ID];
-  const name = info[SCHEDULE_KEY_NAME];
-  const state = info[SCHEDULE_KEY_STATE];
+  const _id = info[SC.SCHEDULE_KEY_ID];
+  const name = info[SC.SCHEDULE_KEY_NAME];
+  const state = info[SC.SCHEDULE_KEY_STATE];
 
   const Selected = (arg) => {
     if (id === arg) return true;
@@ -82,7 +78,10 @@ function LeftContents() {
             <div className="list-wrap hover" style={{ maxHeight: "780px" }}>
               <ul style={{ paddingRight: "20px" }}>
                 {scheduleList.map((value) => (
-                  <LeftScheduleList key={value[SCHEDULE_KEY_ID]} info={value} />
+                  <LeftScheduleList
+                    key={value[SC.SCHEDULE_KEY_ID]}
+                    info={value}
+                  />
                 ))}
               </ul>
             </div>

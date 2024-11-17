@@ -9,15 +9,7 @@ import {
   // TabLogSelects,
 } from "./Item";
 
-import {
-  SCHEDULE_KEY_SUBSID,
-  SCHEDULE_KEY_STATE,
-  SCHEDULE_KEY_STARTDATETIME,
-  SCHEDULE_KEY_SCHEDULETYPE,
-  SCHEDULE_KEY_REPEATCYCLEMONTH,
-  SCHEDULE_KEY_REPEATCYCLEWEEK,
-  SCHEDULE_KEY_REPEATCYCLEDAY,
-} from "common/constants/schedule.constant";
+import SC from "common/constants/schedule.constant";
 
 import { TabPanelProps, CustomTabProps } from "../types/tap";
 
@@ -66,7 +58,7 @@ export const TabPanel = ({ children, value, index }: TabPanelProps) => {
   );
 };
 
-export const CustomTab = ({ id, scheduleData, hostData }: CustomTabProps) => {
+export const CustomTab = ({ id, scheduleData }: CustomTabProps) => {
   const [value, setValue] = React.useState<number>(0); //tab 위치
   const tabhandleChange = (e: React.SyntheticEvent, index: number) => {
     setValue(index); //tab 위치 변경
@@ -123,28 +115,28 @@ export const CustomTab = ({ id, scheduleData, hostData }: CustomTabProps) => {
             <tbody>
               <tr>
                 <td className="align-center">
-                  {scheduleData[SCHEDULE_KEY_STATE]}
+                  {scheduleData[SC.SCHEDULE_KEY_STATE]}
                 </td>
                 <td className="align-center">
-                  {scheduleData[SCHEDULE_KEY_SUBSID]}
+                  {scheduleData[SC.SCHEDULE_KEY_SUBSID]}
                 </td>
                 <td className="align-center">
-                  {scheduleData[SCHEDULE_KEY_STARTDATETIME].length > 0 &&
-                    moment(scheduleData[SCHEDULE_KEY_STARTDATETIME]).format(
+                  {scheduleData[SC.SCHEDULE_KEY_STARTDATETIME].length > 0 &&
+                    moment(scheduleData[SC.SCHEDULE_KEY_STARTDATETIME]).format(
                       "YYYY-MM-DD"
                     )}
                 </td>
                 <td className="align-center">
-                  {scheduleData[SCHEDULE_KEY_STARTDATETIME].length > 0 &&
-                    moment(scheduleData[SCHEDULE_KEY_STARTDATETIME]).format(
+                  {scheduleData[SC.SCHEDULE_KEY_STARTDATETIME].length > 0 &&
+                    moment(scheduleData[SC.SCHEDULE_KEY_STARTDATETIME]).format(
                       "hh:mm a"
                     )}
                 </td>
                 <td className="align-center">
-                  {scheduleData[SCHEDULE_KEY_SCHEDULETYPE] +
-                    scheduleData[SCHEDULE_KEY_REPEATCYCLEMONTH] +
-                    scheduleData[SCHEDULE_KEY_REPEATCYCLEWEEK] +
-                    scheduleData[SCHEDULE_KEY_REPEATCYCLEDAY]}
+                  {scheduleData[SC.SCHEDULE_KEY_SCHEDULETYPE] +
+                    scheduleData[SC.SCHEDULE_KEY_REPEATCYCLEMONTH] +
+                    scheduleData[SC.SCHEDULE_KEY_REPEATCYCLEWEEK] +
+                    scheduleData[SC.SCHEDULE_KEY_REPEATCYCLEDAY]}
                 </td>
               </tr>
             </tbody>
