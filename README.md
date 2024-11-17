@@ -1,9 +1,32 @@
 # React_TypeScript
 
+- 11월 17일
+
+  - 진행 파일: schedule.constant.ts, pages/schedule/components/LeftContents.tsx
+  - schedule.constant.ts export를 export default로 변경
+
+- 11월 16일
+
+  - 진행 파일: schedule.constant.ts
+  - enum vs as const : Typescript에서 가독성을 높이기 위한 일환으로 서로 연관된 상수들을 하나의 namespace에 묶어 관리할 때, enum키워드를 사용해 Enum type을 선언하거나 객체 리터럴에 as const라는 type assertion을 사용합니다. 그렇지만 두 문법엔 차이점이 있다.
+  - enum: 다른 언어의 Enumeration 문법처럼 서로 연관된 상수들을 하나의 namespace로 묶어 추상화시키기 위해 도입된 것입니다. 이를 통해 코드만 보더라도 의도를 명확히 알 수 있어 가독성을 높일 수 있습니다.
+  - 그렇지만 enum은 Tree-shaking이 되지않는다.
+  - Tree-shaking: 사용하지 않는 코드를 제거하여 코드를 가볍게 만드는 최적화 과정을 말한다.
+  - 정리하자면 번들러과정에서 데드코드를 제거해야하는데 enum은 실제 컴파일된 코드에서는 enum 코드가 살아 있게 된다.
+  - as const: type assertion의 한 종류로써 리터럴 타입의 추론 범위를 줄이고 값의 재할당을 막기 위한 목적으로 만들어졌습니다. 특히 object나 array 타입의 경우 참조 타입이 아니기 때문에 const로 선언하더라도 내부 프로퍼티의 추론범위가 한정되지도 않고 변경된다. 그래서 as const를 사용하여 객체의 모든 프로퍼티들을 readonly로 변경하고 각 프로퍼티의 타입이 할당된 값으로 추론시킨다.
+  - 이렇듯, as const를 사용하면 원시 타입이든 참조 타입이든 값의 재할당을 막아버리기 때문에 의도치 않은 변경으로 인한 오류를 없앨 수 있습니다. 또한, 리터럴 타입의 추론 범위가 리터럴 값 자체로 한정되면서 좀 더 안전하게 코드를 작성할 수 있다.
+  - 그래서 as const와 enum중 어떤 선택이 정답인지 물어본다면 이는 회사의 정책또는 팀에따라 다를 것이라고 생각한다. enum의 단점이 정말 서비스에 크리티컬한 데미지를 줄 수 있는지에 대한 계산이 가능할까? 라는 의문과 이미 다른 language에서는 대체적으로 많이 쓰이고 있기때문에 리딩시 enum은 상수구나 라고 바로 알 수 있기 때문이다.
+
 - 11월 14일
 
   - 진행 파일: pages/schedule/components/Tab.tsx, pages/schedule/components/Item.tsx, log.constant.ts
   - Tab.tsx파일 오류 수정
+  - 어제 ts변환중 new Set()관련해서 TS2802 오류코드에 대해서 알아보았다.
+  - 해당 오류는 ES6기능을 사용하여 배열을 유니크한 값으로 변환하려고 할 때 TypeScript에서 발생하는 문제입니다.
+  - 해결방법은 tsconfig.json에 "target": "es2015" 또는 "downlevelIteration": true 를 추가 하면된다.
+  - 그리고 문득 반복문으로(List) 유니크한 값을 찾는 것과 Set을 사용하는 것중 어느것이 더빠른지 찾아보았다.
+  - List: 중복을 검사하기위해 모든 요소를 비교해야하므로 시간복잡도는 O(n^2)
+  - Set: 내부적으로 해시를 사용해 데이터를 저장하기 때문에, 요소 추가와 중복 검사의 시간복잡도는 O(n)
 
 - 11월 13일
 
