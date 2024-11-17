@@ -1,11 +1,11 @@
-import React from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { scheduleListStore } from 'global/schedule';
-import { SCHEDULE_KEY_ID } from 'common/constants/schedule.constant';
-import { GetSchedule } from 'pages/schedule';
-import { customerStore } from 'global/customer';
+import React from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { scheduleListStore } from "global/schedule";
+import SC from "common/constants/schedule.constant";
+import { GetSchedule } from "pages/schedule";
+import { customerStore } from "global/customer";
 
 export const ScheduleTopLink = React.memo(function ScheduleTopLink({
   setPath,
@@ -15,7 +15,7 @@ export const ScheduleTopLink = React.memo(function ScheduleTopLink({
   const { scheduleList, setScheduleList } = scheduleListStore();
   const scheduleURL =
     scheduleList?.length > 0
-      ? `/schedule/info/${scheduleList[0][SCHEDULE_KEY_ID]}`
+      ? `/schedule/info/${scheduleList[0][SC.SCHEDULE_KEY_ID]}`
       : `/schedule/info/notfound`;
 
   const ClickEventHandler = async () => {
