@@ -55,7 +55,7 @@ import {
   EditHostInformationProps,
   ScheduleHostLogProps,
   TabHostLogSelectsProps,
-} from "../types/items";
+} from "../types";
 import { GetScheduleLog, GetSchedule } from "pages/schedule";
 import { MonitoringData } from "pages/monitoring/types/index";
 

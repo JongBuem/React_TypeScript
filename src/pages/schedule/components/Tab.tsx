@@ -11,7 +11,7 @@ import {
 
 import { ScheduleConstant } from "common/constants/inex";
 
-import { TabPanelProps, CustomTabProps } from "../types/tap";
+import { TabPanelProps, CustomTabProps } from "../types";
 
 export const StyledTab = styled(Tab)(() => ({
   width: 100,
