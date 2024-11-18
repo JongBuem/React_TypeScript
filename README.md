@@ -1,5 +1,31 @@
 # React_TypeScript
 
+- 11월 18일
+
+  - 진행 파일: schedule.constant.ts, pages/schedule/components/HeadContents.tsx, pages/schedule/types
+  - schedule.constant.ts를 다시 const enum으로 변경 후, constant/index.ts로 모듈화
+  - const enum: enum과 마찬가지로 상수의 추상화라는 목적은 같지만, 트랜스파일된 결과는 아예 다르기 때문에 상황에 따라 어떤 것을 사용할 지 판단할 필요가 있다.
+  - const enum은 객체 리터럴 조차 결과에 남지 않기 때문에 훨씬 더 적은 코드를 만듭니다. 실제 배포되는 코드의 크기는 티끌만큼이라도 줄이는 것이 도움되기 때문에 reverse mapping이 필요한 경우가 아니라면 const enum을 사용하는 것이 좋습니다.
+  - 아래처럼 트랜스파일 이후 코드를 보면, 어떠한 객체 리터럴도 존재하지 않습니다. Typescript는 const enum의 멤버에 접근하는 코드를 각 멤버의 값으로 치환하지만, enum과 달리 선언된 const enum 객체를 최종 결과물에 포함시키지 않습니다.
+
+```javascript
+//const enum
+// transpile 이전
+const enum COLOR {
+  red,
+  blue,
+  green,
+}
+console.log(COLOR.red);
+console.log(COLOR.blue);
+console.log(COLOR.green);
+
+// transplie 이후
+console.log(0 /* red */);
+console.log(1 /* blue */);
+console.log(2 /* green */);
+```
+
 - 11월 17일
 
   - 진행 파일: schedule.constant.ts, pages/schedule/components/LeftContents.tsx
@@ -13,9 +39,57 @@
   - 그렇지만 enum은 Tree-shaking이 되지않는다.
   - Tree-shaking: 사용하지 않는 코드를 제거하여 코드를 가볍게 만드는 최적화 과정을 말한다.
   - 정리하자면 번들러과정에서 데드코드를 제거해야하는데 enum은 실제 컴파일된 코드에서는 enum 코드가 살아 있게 된다.
-  - as const: type assertion의 한 종류로써 리터럴 타입의 추론 범위를 줄이고 값의 재할당을 막기 위한 목적으로 만들어졌습니다. 특히 object나 array 타입의 경우 참조 타입이 아니기 때문에 const로 선언하더라도 내부 프로퍼티의 추론범위가 한정되지도 않고 변경된다. 그래서 as const를 사용하여 객체의 모든 프로퍼티들을 readonly로 변경하고 각 프로퍼티의 타입이 할당된 값으로 추론시킨다.
-  - 이렇듯, as const를 사용하면 원시 타입이든 참조 타입이든 값의 재할당을 막아버리기 때문에 의도치 않은 변경으로 인한 오류를 없앨 수 있습니다. 또한, 리터럴 타입의 추론 범위가 리터럴 값 자체로 한정되면서 좀 더 안전하게 코드를 작성할 수 있다.
-  - 그래서 as const와 enum중 어떤 선택이 정답인지 물어본다면 이는 회사의 정책또는 팀에따라 다를 것이라고 생각한다. enum의 단점이 정말 서비스에 크리티컬한 데미지를 줄 수 있는지에 대한 계산이 가능할까? 라는 의문과 이미 다른 language에서는 대체적으로 많이 쓰이고 있기때문에 리딩시 enum은 상수구나 라고 바로 알 수 있기 때문이다.
+
+```javascript
+//enum
+// transpile 이전
+enum COLOR {
+  red,
+  blue,
+  green
+}
+
+// transpile 이후
+var COLOR;
+(function (COLOR) {
+    COLOR[COLOR["red"] = 0] = "red";
+    COLOR[COLOR["blue"] = 1] = "blue";
+    COLOR[COLOR["green"] = 2] = "green";
+})(COLOR || (COLOR = {}));
+```
+
+- as const: type assertion의 한 종류로써 리터럴 타입의 추론 범위를 줄이고 값의 재할당을 막기 위한 목적으로 만들어졌습니다. 특히 object나 array 타입의 경우 참조 타입이 아니기 때문에 const로 선언하더라도 내부 프로퍼티의 추론범위가 한정되지도 않고 변경된다. 그래서 as const를 사용하여 객체의 모든 프로퍼티들을 readonly로 변경하고 각 프로퍼티의 타입이 할당된 값으로 추론시킨다.
+- 이렇듯, as const를 사용하면 원시 타입이든 참조 타입이든 값의 재할당을 막아버리기 때문에 의도치 않은 변경으로 인한 오류를 없앨 수 있습니다. 또한, 리터럴 타입의 추론 범위가 리터럴 값 자체로 한정되면서 좀 더 안전하게 코드를 작성할 수 있다.
+
+```javascript
+//as const
+const obj = {
+  a: 10,
+  b: [20, 30],
+  c: {
+    d: {
+      e: {
+        greeting: "Hello",
+      },
+    },
+  },
+} as const;
+
+// 다음과 같이 추론됨.
+const obj: {
+  readonly a: 10;
+  readonly b: readonly [20, 30];
+  readonly c: {
+    readonly d: {
+      readonly e: {
+        readonly greeting: "Hello";
+      };
+    };
+  };
+};
+```
+
+- 나의 생각은 as const와 enum중 어떤 선택이 정답인지 물어본다면 이는 회사의 정책또는 팀에따라 다를 것이라고 생각한다. enum의 단점이 정말 서비스에 크리티컬한 데미지를 줄 수 있는지에 대한 계산이 가능할까? 라는 의문과 이미 다른 language에서는 대체적으로 많이 쓰이고 있기때문에 리딩시 enum은 상수구나 라고 바로 알 수 있기 때문이다. 그리고 const enum의 존재도 파악해보자.
 
 - 11월 14일
 
