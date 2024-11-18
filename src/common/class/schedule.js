@@ -9,7 +9,7 @@ import {
   MONITORING_HOST_KEY_STATUSES,
   MONITORING_HOST_KEY_STATUSES_DISPLAYSTATUS,
 } from "common/constants/monitoring.constant";
-import SC from "common/constants/schedule.constant";
+import { ScheduleConstant } from "common/constants/inex";
 import { MonitoringHostDATA } from "./monitoring";
 
 export class ScheduleHostDATA extends MonitoringHostDATA {
@@ -80,51 +80,61 @@ export class ScheduleInfo {
   }
 
   useYn(value) {
-    if (value[SC.SCHEDULE_KEY_STATE]) return "활성화";
+    if (value[ScheduleConstant.SCHEDULE_KEY_STATE]) return "활성화";
     else return "비활성화";
   }
 
   scheduleType(value) {
-    if (value[SC.SCHEDULE_KEY_SCHEDULETYPE] === "00") return "반복 안 함";
+    if (value[ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE] === "00")
+      return "반복 안 함";
     else return "";
   }
 
   repeatCycleMonth(value) {
-    if (value[SC.SCHEDULE_KEY_SCHEDULETYPE] === "02")
-      return `${value[SC.SCHEDULE_KEY_REPEATCYCLEMONTH]}개월마다 `;
+    if (value[ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE] === "02")
+      return `${
+        value[ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEMONTH]
+      }개월마다 `;
     else return "";
   }
 
   repeatCycleWeek(value) {
-    if (value[SC.SCHEDULE_KEY_SCHEDULETYPE] === "01")
-      return `${value[SC.SCHEDULE_KEY_REPEATCYCLEWEEK]}주마다 `;
-    else if (value[SC.SCHEDULE_KEY_SCHEDULETYPE] === "02")
-      return `${this.Week(value[SC.SCHEDULE_KEY_REPEATCYCLEWEEK])} `;
+    if (value[ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE] === "01")
+      return `${value[ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEWEEK]}주마다 `;
+    else if (value[ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE] === "02")
+      return `${this.Week(
+        value[ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEWEEK]
+      )} `;
     else return "";
   }
 
   repeatCycleDay(value) {
-    if (value[SC.SCHEDULE_KEY_SCHEDULETYPE] !== "00")
-      return this.Day(value[SC.SCHEDULE_KEY_REPEATCYCLEDAY]);
+    if (value[ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE] !== "00")
+      return this.Day(value[ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEDAY]);
     else return "";
   }
 
   get scheduleData() {
     const scheduleInfo = this.scheduleInfo;
     return {
-      [SC.SCHEDULE_KEY_SUBSID]: scheduleInfo[SC.SCHEDULE_KEY_SUBSID] ?? "",
-      [SC.SCHEDULE_KEY_STARTDATETIME]:
-        scheduleInfo[SC.SCHEDULE_KEY_STARTDATETIME] ?? "",
-      [SC.SCHEDULE_KEY_STATE]: this.useYn(scheduleInfo),
-      [SC.SCHEDULE_KEY_SCHEDULETYPE]: this.scheduleType(scheduleInfo),
-      [SC.SCHEDULE_KEY_REPEATCYCLEMONTH]: this.repeatCycleMonth(scheduleInfo),
-      [SC.SCHEDULE_KEY_REPEATCYCLEWEEK]: this.repeatCycleWeek(scheduleInfo),
-      [SC.SCHEDULE_KEY_REPEATCYCLEDAY]: this.repeatCycleDay(scheduleInfo),
+      [ScheduleConstant.SCHEDULE_KEY_SUBSID]:
+        scheduleInfo[ScheduleConstant.SCHEDULE_KEY_SUBSID] ?? "",
+      [ScheduleConstant.SCHEDULE_KEY_STARTDATETIME]:
+        scheduleInfo[ScheduleConstant.SCHEDULE_KEY_STARTDATETIME] ?? "",
+      [ScheduleConstant.SCHEDULE_KEY_STATE]: this.useYn(scheduleInfo),
+      [ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE]:
+        this.scheduleType(scheduleInfo),
+      [ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEMONTH]:
+        this.repeatCycleMonth(scheduleInfo),
+      [ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEWEEK]:
+        this.repeatCycleWeek(scheduleInfo),
+      [ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEDAY]:
+        this.repeatCycleDay(scheduleInfo),
     };
   }
 
   get hostData() {
-    const result = this.scheduleInfo[SC.SCHEDULE_KEY_HOST] ?? [];
+    const result = this.scheduleInfo[ScheduleConstant.SCHEDULE_KEY_HOST] ?? [];
     return result;
   }
 }

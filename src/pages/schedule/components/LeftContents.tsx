@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { scheduleListStore } from "global/schedule";
 import SimpleBar from "simplebar-react";
-import SC from "common/constants/schedule.constant";
+import { ScheduleConstant } from "common/constants/inex";
 import { ScheduleData } from "../types";
 
 function LeftContents() {
@@ -44,9 +44,9 @@ function LeftContents() {
               <ul style={{ paddingRight: "20px" }}>
                 {list &&
                   list?.map((value) => {
-                    const _id = value[SC.SCHEDULE_KEY_ID];
-                    const name = value[SC.SCHEDULE_KEY_NAME];
-                    const state = value[SC.SCHEDULE_KEY_STATE];
+                    const _id = value[ScheduleConstant.SCHEDULE_KEY_ID];
+                    const name = value[ScheduleConstant.SCHEDULE_KEY_NAME];
+                    const state = value[ScheduleConstant.SCHEDULE_KEY_STATE];
 
                     return (
                       <li

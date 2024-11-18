@@ -23,7 +23,7 @@ import {
   scheduleLogStore,
 } from "global/schedule";
 import { customerStore } from "global/customer";
-import SC from "common/constants/schedule.constant";
+import { ScheduleConstant } from "common/constants/inex";
 import {
   MONITORING_HOST_KEY_NAME,
   MONITORING_HOST_KEY_SKU,
@@ -477,16 +477,22 @@ export const ScheduleInformation = React.memo(function ScheduleInformation({
             <tr>
               <ScheduleInformationStatusInput
                 value={
-                  scheduleInfo ? scheduleInfo[SC.SCHEDULE_KEY_STATE] : false
+                  scheduleInfo
+                    ? scheduleInfo[ScheduleConstant.SCHEDULE_KEY_STATE]
+                    : false
                 }
               />
               <ScheduleInformationSubscriptionInput
-                value={scheduleInfo ? scheduleInfo[SC.SCHEDULE_KEY_SUBSID] : ""}
+                value={
+                  scheduleInfo
+                    ? scheduleInfo[ScheduleConstant.SCHEDULE_KEY_SUBSID]
+                    : ""
+                }
               />
               <ScheduleInformationDateInput
                 value={
                   scheduleInfo
-                    ? scheduleInfo[SC.SCHEDULE_KEY_STARTDATETIME]
+                    ? scheduleInfo[ScheduleConstant.SCHEDULE_KEY_STARTDATETIME]
                     : ""
                 }
               />
@@ -495,15 +501,30 @@ export const ScheduleInformation = React.memo(function ScheduleInformation({
                   scheduleInfo && Object.keys(scheduleInfo)?.length > 0
                     ? {
                         repeatedInput:
-                          scheduleInfo[SC.SCHEDULE_KEY_SCHEDULETYPE] === "01"
-                            ? scheduleInfo[SC.SCHEDULE_KEY_REPEATCYCLEWEEK]
-                            : scheduleInfo[SC.SCHEDULE_KEY_SCHEDULETYPE] ===
-                              "02"
-                            ? scheduleInfo[SC.SCHEDULE_KEY_REPEATCYCLEMONTH]
+                          scheduleInfo[
+                            ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE
+                          ] === "01"
+                            ? scheduleInfo[
+                                ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEWEEK
+                              ]
+                            : scheduleInfo[
+                                ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE
+                              ] === "02"
+                            ? scheduleInfo[
+                                ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEMONTH
+                              ]
                             : "",
-                        repeated: scheduleInfo[SC.SCHEDULE_KEY_SCHEDULETYPE],
-                        week: scheduleInfo[SC.SCHEDULE_KEY_REPEATCYCLEWEEK],
-                        dayofweek: scheduleInfo[SC.SCHEDULE_KEY_REPEATCYCLEDAY],
+                        repeated:
+                          scheduleInfo[
+                            ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE
+                          ],
+                        week: scheduleInfo[
+                          ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEWEEK
+                        ],
+                        dayofweek:
+                          scheduleInfo[
+                            ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEDAY
+                          ],
                       }
                     : {
                         repeatedInput: "",
@@ -574,9 +595,9 @@ export const EditHostInformation = React.memo(function EditHostInformation({
   React.useEffect(() => {
     if (
       scheduleInfo &&
-      scheduleInfo[SC.SCHEDULE_KEY_TARGETHOSTLIST] !== undefined
+      scheduleInfo[ScheduleConstant.SCHEDULE_KEY_TARGETHOSTLIST] !== undefined
     ) {
-      setCheck(scheduleInfo[SC.SCHEDULE_KEY_TARGETHOSTLIST]);
+      setCheck(scheduleInfo[ScheduleConstant.SCHEDULE_KEY_TARGETHOSTLIST]);
       setScheduleInfoCheck(true);
     }
   }, [scheduleInfo?.targetHostList]);

@@ -41,17 +41,7 @@ import {
   MONITORING_HOST_KEY_SKU_LOCATION,
   MONITORING_HOST_KEY_STATUSES,
 } from "common/constants/monitoring.constant";
-import {
-  SCHEDULE_KEY_NAME,
-  SCHEDULE_KEY_SUBSID,
-  SCHEDULE_KEY_STATE,
-  SCHEDULE_KEY_TARGETHOSTLIST,
-  SCHEDULE_KEY_STARTDATETIME,
-  SCHEDULE_KEY_SCHEDULETYPE,
-  SCHEDULE_KEY_REPEATCYCLEMONTH,
-  SCHEDULE_KEY_REPEATCYCLEWEEK,
-  SCHEDULE_KEY_REPEATCYCLEDAY,
-} from "common/constants/schedule.constant";
+import { ScheduleConstant } from "common/constants/inex";
 import { GetScheduleLog, GetSchedule } from "pages/schedule";
 
 export const ScheduleLogItem = React.memo(function ScheduleLogItem({ item }) {
@@ -302,8 +292,12 @@ export const TitleInput = React.memo(function TitleInput({
 
   //초기화
   React.useEffect(() => {
-    if (scheduleInfo[SCHEDULE_KEY_NAME] === undefined) setNewTitle("");
-    else handleChange({ target: { value: scheduleInfo[SCHEDULE_KEY_NAME] } });
+    if (scheduleInfo[ScheduleConstant.SCHEDULE_KEY_NAME] === undefined)
+      setNewTitle("");
+    else
+      handleChange({
+        target: { value: scheduleInfo[ScheduleConstant.SCHEDULE_KEY_NAME] },
+      });
   }, [scheduleInfo?.scheduleName]);
 
   return (
@@ -773,27 +767,45 @@ export const ScheduleInformation = React.memo(function ScheduleInformation({
           <tbody>
             <tr>
               <ScheduleInformationStatusInput
-                value={scheduleInfo[SCHEDULE_KEY_STATE]}
+                value={scheduleInfo[ScheduleConstant.SCHEDULE_KEY_STATE]}
               />
               <ScheduleInformationSubscriptionInput
-                value={scheduleInfo[SCHEDULE_KEY_SUBSID]}
+                value={scheduleInfo[ScheduleConstant.SCHEDULE_KEY_SUBSID]}
               />
               <ScheduleInformationDateInput
-                value={scheduleInfo[SCHEDULE_KEY_STARTDATETIME]}
+                value={
+                  scheduleInfo[ScheduleConstant.SCHEDULE_KEY_STARTDATETIME]
+                }
               />
               <ScheduleInformationRepeatedInput
                 value={
                   Object.keys(scheduleInfo)?.length > 0
                     ? {
                         repeatedInput:
-                          scheduleInfo[SCHEDULE_KEY_SCHEDULETYPE] === "01"
-                            ? scheduleInfo[SCHEDULE_KEY_REPEATCYCLEWEEK]
-                            : scheduleInfo[SCHEDULE_KEY_SCHEDULETYPE] === "02"
-                            ? scheduleInfo[SCHEDULE_KEY_REPEATCYCLEMONTH]
+                          scheduleInfo[
+                            ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE
+                          ] === "01"
+                            ? scheduleInfo[
+                                ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEWEEK
+                              ]
+                            : scheduleInfo[
+                                ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE
+                              ] === "02"
+                            ? scheduleInfo[
+                                ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEMONTH
+                              ]
                             : "",
-                        repeated: scheduleInfo[SCHEDULE_KEY_SCHEDULETYPE],
-                        week: scheduleInfo[SCHEDULE_KEY_REPEATCYCLEWEEK],
-                        dayofweek: scheduleInfo[SCHEDULE_KEY_REPEATCYCLEDAY],
+                        repeated:
+                          scheduleInfo[
+                            ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE
+                          ],
+                        week: scheduleInfo[
+                          ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEWEEK
+                        ],
+                        dayofweek:
+                          scheduleInfo[
+                            ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEDAY
+                          ],
                       }
                     : undefined
                 }
@@ -974,8 +986,10 @@ export const EditHostInformation = React.memo(function EditHostInformation({
   }, [allCheck, hostList]);
 
   React.useEffect(() => {
-    if (scheduleInfo[SCHEDULE_KEY_TARGETHOSTLIST] !== undefined) {
-      setCheck(scheduleInfo[SCHEDULE_KEY_TARGETHOSTLIST]);
+    if (
+      scheduleInfo[ScheduleConstant.SCHEDULE_KEY_TARGETHOSTLIST] !== undefined
+    ) {
+      setCheck(scheduleInfo[ScheduleConstant.SCHEDULE_KEY_TARGETHOSTLIST]);
       setScheduleInfoCheck(true);
     }
   }, [scheduleInfo?.targetHostList]);

@@ -9,7 +9,7 @@ import {
   // TabLogSelects,
 } from "./Item";
 
-import SC from "common/constants/schedule.constant";
+import { ScheduleConstant } from "common/constants/inex";
 
 import { TabPanelProps, CustomTabProps } from "../types/tap";
 
@@ -115,28 +115,34 @@ export const CustomTab = ({ id, scheduleData }: CustomTabProps) => {
             <tbody>
               <tr>
                 <td className="align-center">
-                  {scheduleData[SC.SCHEDULE_KEY_STATE]}
+                  {scheduleData[ScheduleConstant.SCHEDULE_KEY_STATE]}
                 </td>
                 <td className="align-center">
-                  {scheduleData[SC.SCHEDULE_KEY_SUBSID]}
+                  {scheduleData[ScheduleConstant.SCHEDULE_KEY_SUBSID]}
                 </td>
                 <td className="align-center">
-                  {scheduleData[SC.SCHEDULE_KEY_STARTDATETIME].length > 0 &&
-                    moment(scheduleData[SC.SCHEDULE_KEY_STARTDATETIME]).format(
-                      "YYYY-MM-DD"
-                    )}
+                  {scheduleData[ScheduleConstant.SCHEDULE_KEY_STARTDATETIME]
+                    .length > 0 &&
+                    moment(
+                      scheduleData[ScheduleConstant.SCHEDULE_KEY_STARTDATETIME]
+                    ).format("YYYY-MM-DD")}
                 </td>
                 <td className="align-center">
-                  {scheduleData[SC.SCHEDULE_KEY_STARTDATETIME].length > 0 &&
-                    moment(scheduleData[SC.SCHEDULE_KEY_STARTDATETIME]).format(
-                      "hh:mm a"
-                    )}
+                  {scheduleData[ScheduleConstant.SCHEDULE_KEY_STARTDATETIME]
+                    .length > 0 &&
+                    moment(
+                      scheduleData[ScheduleConstant.SCHEDULE_KEY_STARTDATETIME]
+                    ).format("hh:mm a")}
                 </td>
                 <td className="align-center">
-                  {scheduleData[SC.SCHEDULE_KEY_SCHEDULETYPE] +
-                    scheduleData[SC.SCHEDULE_KEY_REPEATCYCLEMONTH] +
-                    scheduleData[SC.SCHEDULE_KEY_REPEATCYCLEWEEK] +
-                    scheduleData[SC.SCHEDULE_KEY_REPEATCYCLEDAY]}
+                  {scheduleData[ScheduleConstant.SCHEDULE_KEY_SCHEDULETYPE] +
+                    scheduleData[
+                      ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEMONTH
+                    ] +
+                    scheduleData[
+                      ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEWEEK
+                    ] +
+                    scheduleData[ScheduleConstant.SCHEDULE_KEY_REPEATCYCLEDAY]}
                 </td>
               </tr>
             </tbody>
