@@ -1,17 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
+import React from "react";
+import moment from "moment";
 
 function HeadContents() {
-  console.log('head');
-  const [nextSchedule, setNextSchedule] = React.useState('');
-  const [nextScheduleUnit, setNextScheduleUnit] = React.useState('');
+  const [nextSchedule, setNextSchedule] = React.useState<string>("");
+  const [nextScheduleUnit, setNextScheduleUnit] = React.useState<string>("");
 
   const GetNextSchedule = React.useCallback(() => {
     const result = new Date();
-    setNextSchedule(moment(result).format('YYYY-MM-DD HH:mm'));
-    setNextScheduleUnit(moment(result).format('a'));
-  });
+    setNextSchedule(moment(result).format("YYYY-MM-DD HH:mm"));
+    setNextScheduleUnit(moment(result).format("a"));
+  }, []);
 
   React.useEffect(() => {
     GetNextSchedule();
@@ -27,7 +25,7 @@ function HeadContents() {
               <p className="head-st-label">Next</p>
               <div className="head-st-count">
                 <span className="total">
-                  {nextSchedule}{' '}
+                  {nextSchedule}{" "}
                   <span className="ft-400 h3">{nextScheduleUnit}</span>
                 </span>
               </div>
@@ -38,8 +36,5 @@ function HeadContents() {
     </div>
   );
 }
-HeadContents.propTypes = {
-  nextSchedule: PropTypes.string,
-  nextScheduleUnit: PropTypes.string,
-};
+
 export default React.memo(HeadContents);
