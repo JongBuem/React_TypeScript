@@ -1,24 +1,14 @@
-import React from 'react';
-import ico_host from 'assets/images/ico_host.png';
-import Skeleton from '@mui/material/Skeleton';
-import { MonitoringStatus } from 'common/class/monitoring';
-import { ContentAccordion } from './styled';
+import React from "react";
+import ico_host from "assets/images/ico_host.png";
+import Skeleton from "@mui/material/Skeleton";
+import { MonitoringStatus } from "common/class/monitoring";
+import { ContentAccordion } from "./styled";
 import {
-  MONITORING_VM_KEY_ID,
-  MONITORING_VM_KEY_NAME,
-  MONITORING_VM_KEY_LOCATION,
-  MONITORING_VM_KEY_STATUSES,
-  MONITORING_vm_STATUSES_KEY,
-  MONITORING_HOST_STATUSES_KEY,
-  MONITORING_HOST_STATUSES_AVAILABLE,
-  MONITORING_VM_STATUSES_RUNNING,
-  MONITORING_VM_STATUSES_STARTING,
-  MONITORING_VM_STATUSES_STOPPING,
-  MONITORING_VM_STATUSES_STOPPED,
-  MONITORING_VM_STATUSES_DEALLOCATED,
-  MONITORING_VM_STATUSES_DEALLOCATING,
-} from 'common/constants/monitoring.constant';
-import PropTypes from 'prop-types';
+  MonitoringHostStatusesConstant,
+  MonitoringVMConstant,
+  MonitoringVMStatusesConstant,
+} from "common/constants";
+import PropTypes from "prop-types";
 
 function Division(array, n) {
   let arr = array;
@@ -32,34 +22,46 @@ function Division(array, n) {
 }
 
 const Count = (vm) => {
-  const VmStatusInstance = new MonitoringStatus(vm, MONITORING_vm_STATUSES_KEY);
+  const VmStatusInstance = new MonitoringStatus(
+    vm,
+    MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY
+  );
   const result = VmStatusInstance.init(
     VmStatusInstance.list,
-    VmStatusInstance.type,
+    VmStatusInstance.type
   );
-  return result[MONITORING_VM_STATUSES_RUNNING];
+  return result[MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING];
 };
 
 function Color(key, status) {
-  if (key === MONITORING_HOST_STATUSES_KEY) {
-    if (status === MONITORING_HOST_STATUSES_AVAILABLE) return {};
-    else return { backgroundColor: '#EEEFF2' };
-  } else if (key === MONITORING_vm_STATUSES_KEY) {
-    if (status === MONITORING_VM_STATUSES_RUNNING) return {};
-    else if (status === MONITORING_VM_STATUSES_STARTING)
-      return { backgroundColor: '#2DCCFF' };
-    else if (
-      status === MONITORING_VM_STATUSES_STOPPING ||
-      status === MONITORING_VM_STATUSES_STOPPED
+  if (key === MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_KEY) {
+    if (
+      status ===
+      MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE
     )
-      return { backgroundColor: '#FF3838' };
+      return {};
+    else return { backgroundColor: "#EEEFF2" };
+  } else if (key === MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY) {
+    if (status === MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING)
+      return {};
     else if (
-      status === MONITORING_VM_STATUSES_DEALLOCATED ||
-      status === MONITORING_VM_STATUSES_DEALLOCATING
+      status === MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_STARTING
     )
-      return { backgroundColor: '#FCE83A' };
-    else return { backgroundColor: '#EEEFF2' };
-  } else return { backgroundColor: '#EEEFF2' };
+      return { backgroundColor: "#2DCCFF" };
+    else if (
+      status === MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_STOPPING ||
+      status === MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_STOPPED
+    )
+      return { backgroundColor: "#FF3838" };
+    else if (
+      status ===
+        MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_DEALLOCATED ||
+      status ===
+        MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_DEALLOCATING
+    )
+      return { backgroundColor: "#FCE83A" };
+    else return { backgroundColor: "#EEEFF2" };
+  } else return { backgroundColor: "#EEEFF2" };
 }
 
 function VirtualMachines({ vmName, vmLocation, vmStatuse }) {
@@ -68,14 +70,20 @@ function VirtualMachines({ vmName, vmLocation, vmStatuse }) {
       <div className="tooltip">
         <span
           className="vm-st running"
-          style={Color(MONITORING_vm_STATUSES_KEY, vmStatuse)}
+          style={Color(
+            MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY,
+            vmStatuse
+          )}
         ></span>
-        <div className="tooltiptext" style={{ width: '150px' }}>
+        <div className="tooltiptext" style={{ width: "150px" }}>
           <span>{vmName}</span>
           <div className="st-wrap">
             <span
               className="st available"
-              style={Color(MONITORING_vm_STATUSES_KEY, vmStatuse)}
+              style={Color(
+                MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY,
+                vmStatuse
+              )}
             ></span>
             <label className="st-label">{vmStatuse}</label>
           </div>
@@ -86,9 +94,9 @@ function VirtualMachines({ vmName, vmLocation, vmStatuse }) {
 }
 
 export const Items = React.memo(function Items({
-  hostName = '',
-  skuName = '',
-  hostStatus = '',
+  hostName = "",
+  skuName = "",
+  hostStatus = "",
   vm,
 }) {
   const [open, setOPen] = React.useState(false);
@@ -96,7 +104,7 @@ export const Items = React.memo(function Items({
   // const [virtualMachines] = React.useState(JSON.parse(vm));
 
   return (
-    <div className="st-item" style={{ minHeight: '110px' }}>
+    <div className="st-item" style={{ minHeight: "110px" }}>
       <ContentAccordion expanded={open}>
         <div>
           <div className="st-head">
@@ -112,12 +120,15 @@ export const Items = React.memo(function Items({
               <div className="st-wrap">
                 <span
                   className="st available"
-                  style={Color(MONITORING_HOST_STATUSES_KEY, hostStatus)}
+                  style={Color(
+                    MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_KEY,
+                    hostStatus
+                  )}
                 ></span>
                 <label className="st-label">{hostStatus}</label>
               </div>
               <button className="accordion" onClick={() => setOPen(!open)}>
-                <i className={!open ? 'icon-arrow-up' : 'icon-arrow-down'}></i>
+                <i className={!open ? "icon-arrow-up" : "icon-arrow-down"}></i>
               </button>
             </div>
           </div>
@@ -127,10 +138,14 @@ export const Items = React.memo(function Items({
                 <ul className="vm-st-wrap">
                   {vmList.map((v, i) => (
                     <VirtualMachines
-                      key={v[MONITORING_VM_KEY_ID]}
-                      vmName={v[MONITORING_VM_KEY_NAME]}
-                      vmLocation={v[MONITORING_VM_KEY_LOCATION]}
-                      vmStatuse={v[MONITORING_VM_KEY_STATUSES]}
+                      key={v[MonitoringVMConstant.MONITORING_VM_KEY_ID]}
+                      vmName={v[MonitoringVMConstant.MONITORING_VM_KEY_NAME]}
+                      vmLocation={
+                        v[MonitoringVMConstant.MONITORING_VM_KEY_LOCATION]
+                      }
+                      vmStatuse={
+                        v[MonitoringVMConstant.MONITORING_VM_KEY_STATUSES]
+                      }
                     />
                   ))}
                 </ul>
@@ -149,7 +164,7 @@ export const Items = React.memo(function Items({
         <div className="vm-list">
           <table
             className="tbl tbl-basic tbl-vm-list"
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
           >
             <colgroup>
               <col width="25%" />
@@ -171,19 +186,19 @@ export const Items = React.memo(function Items({
                   {childArray.map((v, vi) => (
                     <React.Fragment key={vi}>
                       <td className="align-center">
-                        {v[MONITORING_VM_KEY_NAME]}
+                        {v[MonitoringVMConstant.MONITORING_VM_KEY_NAME]}
                       </td>
                       <td className="align-center">
                         <div className="st-wrap">
                           <span
                             className="st available"
                             style={Color(
-                              MONITORING_vm_STATUSES_KEY,
-                              v[MONITORING_VM_KEY_STATUSES],
+                              MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY,
+                              v[MonitoringVMConstant.MONITORING_VM_KEY_STATUSES]
                             )}
                           ></span>
                           <label className="st-label">
-                            {v[MONITORING_VM_KEY_STATUSES]}
+                            {v[MonitoringVMConstant.MONITORING_VM_KEY_STATUSES]}
                           </label>
                         </div>
                       </td>
@@ -218,8 +233,8 @@ export function ItemsLoading() {
             width={50}
             height={30}
             sx={{
-              marginRight: '8px',
-              borderRadius: '100px',
+              marginRight: "8px",
+              borderRadius: "100px",
             }}
           />
           <div className="accordion"></div>
@@ -234,8 +249,8 @@ export function ItemsLoading() {
               width={400}
               height={28}
               sx={{
-                borderRadius: '2px',
-                margin: '0 5px 5px 0',
+                borderRadius: "2px",
+                margin: "0 5px 5px 0",
               }}
             />
           </div>

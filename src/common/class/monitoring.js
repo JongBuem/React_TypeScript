@@ -1,25 +1,9 @@
 import {
-  MONITORING_HOST_KEY_ID,
-  MONITORING_HOST_KEY_NAME,
-  MONITORING_HOST_KEY_SKU,
-  MONITORING_HOST_KEY_SKU_NAME,
-  MONITORING_HOST_KEY_PROPERTIES,
-  MONITORING_HOST_KEY_VIRTUALMACHINES,
-  MONITORING_HOST_KEY_INSTANCEVIEW,
-  MONITORING_HOST_KEY_STATUSES,
-  MONITORING_HOST_KEY_STATUSES_DISPLAYSTATUS,
-  MONITORING_HOST_STATUSES_KEY,
-  MONITORING_HOST_STATUSES_AVAILABLE,
-  MONITORING_VM_KEY_ID,
-  MONITORING_VM_KEY_NAME,
-  MONITORING_VM_KEY_LOCATION,
-  MONITORING_VM_KEY_PROPERTIES,
-  MONITORING_VM_KEY_INSTANCEVIEW,
-  MONITORING_VM_KEY_STATUSES,
-  MONITORING_VM_KEY_STATUSES_DISPLAYSTATUS,
-  MONITORING_vm_STATUSES_KEY,
-  MONITORING_VM_STATUSES_RUNNING,
-} from "common/constants/monitoring.constant";
+  MonitoringHostConstant,
+  MonitoringHostStatusesConstant,
+  MonitoringVMConstant,
+  MonitoringVMStatusesConstant,
+} from "common/constants";
 
 export class MonitoringHostDATA {
   constructor(result) {
@@ -63,36 +47,49 @@ export class MonitoringHostDATA {
   }
 
   getObj(objValue) {
-    const id = this.getValue([MONITORING_HOST_KEY_ID], objValue);
-    const name = this.getValue([MONITORING_HOST_KEY_NAME], objValue);
+    const id = this.getValue(
+      [MonitoringHostConstant.MONITORING_HOST_KEY_ID],
+      objValue
+    );
+    const name = this.getValue(
+      [MonitoringHostConstant.MONITORING_HOST_KEY_NAME],
+      objValue
+    );
     const skuName = this.getValue(
-      [MONITORING_HOST_KEY_SKU, MONITORING_HOST_KEY_SKU_NAME],
+      [
+        MonitoringHostConstant.MONITORING_HOST_KEY_SKU,
+        MonitoringHostConstant.MONITORING_HOST_KEY_SKU_NAME,
+      ],
       objValue
     );
     const statuses = this.getValue(
       [
-        MONITORING_HOST_KEY_PROPERTIES,
-        MONITORING_HOST_KEY_INSTANCEVIEW,
-        MONITORING_HOST_KEY_STATUSES,
+        MonitoringHostConstant.MONITORING_HOST_KEY_PROPERTIES,
+        MonitoringHostConstant.MONITORING_HOST_KEY_INSTANCEVIEW,
+        MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES,
       ],
       objValue,
       [{}]
     );
     const virtualMachines = this.getValue(
-      [MONITORING_HOST_KEY_PROPERTIES, MONITORING_HOST_KEY_VIRTUALMACHINES],
+      [
+        MonitoringHostConstant.MONITORING_HOST_KEY_PROPERTIES,
+        MonitoringHostConstant.MONITORING_HOST_KEY_VIRTUALMACHINES,
+      ],
       objValue,
       []
     );
 
     return {
-      [MONITORING_HOST_KEY_ID]: id,
-      [MONITORING_HOST_KEY_NAME]: name,
-      [MONITORING_HOST_KEY_SKU]: skuName,
-      [MONITORING_HOST_KEY_STATUSES]:
+      [MonitoringHostConstant.MONITORING_HOST_KEY_ID]: id,
+      [MonitoringHostConstant.MONITORING_HOST_KEY_NAME]: name,
+      [MonitoringHostConstant.MONITORING_HOST_KEY_SKU]: skuName,
+      [MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES]:
         statuses[statuses.length - 1][
-          MONITORING_HOST_KEY_STATUSES_DISPLAYSTATUS
+          MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES_DISPLAYSTATUS
         ],
-      [MONITORING_HOST_KEY_VIRTUALMACHINES]: virtualMachines,
+      [MonitoringHostConstant.MONITORING_HOST_KEY_VIRTUALMACHINES]:
+        virtualMachines,
     };
   }
 
@@ -115,24 +112,35 @@ export class MonitoringVmDATA extends MonitoringHostDATA {
   }
 
   getObj(objValue) {
-    const id = super.getValue([MONITORING_VM_KEY_ID], objValue);
-    const name = super.getValue([MONITORING_VM_KEY_NAME], objValue);
-    const location = super.getValue([MONITORING_VM_KEY_LOCATION], objValue);
+    const id = super.getValue(
+      [MonitoringVMConstant.MONITORING_VM_KEY_ID],
+      objValue
+    );
+    const name = super.getValue(
+      [MonitoringVMConstant.MONITORING_VM_KEY_NAME],
+      objValue
+    );
+    const location = super.getValue(
+      [MonitoringVMConstant.MONITORING_VM_KEY_LOCATION],
+      objValue
+    );
     const statuses = super.getValue(
       [
-        MONITORING_VM_KEY_PROPERTIES,
-        MONITORING_VM_KEY_INSTANCEVIEW,
-        MONITORING_VM_KEY_STATUSES,
+        MonitoringVMConstant.MONITORING_VM_KEY_PROPERTIES,
+        MonitoringVMConstant.MONITORING_VM_KEY_INSTANCEVIEW,
+        MonitoringVMConstant.MONITORING_VM_KEY_STATUSES,
       ],
       objValue,
       [{}]
     );
     return {
-      [MONITORING_VM_KEY_ID]: id,
-      [MONITORING_HOST_KEY_NAME]: name,
-      [MONITORING_VM_KEY_LOCATION]: location,
-      [MONITORING_VM_KEY_STATUSES]:
-        statuses[statuses.length - 1][MONITORING_VM_KEY_STATUSES_DISPLAYSTATUS],
+      [MonitoringVMConstant.MONITORING_VM_KEY_ID]: id,
+      [MonitoringHostConstant.MONITORING_HOST_KEY_NAME]: name,
+      [MonitoringVMConstant.MONITORING_VM_KEY_LOCATION]: location,
+      [MonitoringVMConstant.MONITORING_VM_KEY_STATUSES]:
+        statuses[statuses.length - 1][
+          MonitoringVMConstant.MONITORING_VM_KEY_STATUSES_DISPLAYSTATUS
+        ],
     };
   }
 }
@@ -160,7 +168,7 @@ export class MonitoringData {
   changeData(parentArray, childArray) {
     const result = parentArray.map((v) => {
       const virtualMachines = this.gethostVm(
-        v[MONITORING_HOST_KEY_VIRTUALMACHINES],
+        v[MonitoringHostConstant.MONITORING_HOST_KEY_VIRTUALMACHINES],
         childArray
       );
       return {
@@ -202,38 +210,44 @@ export class MonitoringStatus {
   gethostAvailable(array) {
     const result = array.filter(
       (v) =>
-        v[MONITORING_HOST_KEY_STATUSES] === MONITORING_HOST_STATUSES_AVAILABLE
+        v[MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES] ===
+        MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE
     ).length;
     return result;
   }
 
   getVmRunning(array) {
     const result = array.filter(
-      (v) => v[MONITORING_VM_KEY_STATUSES] === MONITORING_VM_STATUSES_RUNNING
+      (v) =>
+        v[MonitoringVMConstant.MONITORING_VM_KEY_STATUSES] ===
+        MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING
     ).length;
     return result;
   }
 
   getHostStatus(array) {
     return {
-      [MONITORING_HOST_STATUSES_AVAILABLE]: this.gethostAvailable(array),
+      [MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE]:
+        this.gethostAvailable(array),
     };
   }
 
   getVmStatus(array) {
     return {
-      [MONITORING_VM_STATUSES_RUNNING]: this.getVmRunning(array),
+      [MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING]:
+        this.getVmRunning(array),
     };
   }
 
   init(array, type) {
-    if (type === MONITORING_HOST_STATUSES_KEY) return this.getHostStatus(array);
-    else if (type === MONITORING_vm_STATUSES_KEY)
+    if (type === MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_KEY)
+      return this.getHostStatus(array);
+    else if (type === MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY)
       return this.getVmStatus(array);
     else
       return {
-        [MONITORING_HOST_STATUSES_AVAILABLE]: 0,
-        [MONITORING_VM_STATUSES_RUNNING]: 0,
+        [MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE]: 0,
+        [MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING]: 0,
       };
   }
 }

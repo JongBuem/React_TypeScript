@@ -1,28 +1,34 @@
-export const MONITORING_HOST_KEY_ID = "id";
-export const MONITORING_HOST_KEY_NAME = "name";
-export const MONITORING_HOST_KEY_SKU = "sku";
-export const MONITORING_HOST_KEY_SKU_NAME = "name";
-export const MONITORING_HOST_KEY_SKU_LOCATION = "location";
-export const MONITORING_HOST_KEY_PROPERTIES = "properties";
-export const MONITORING_HOST_KEY_VIRTUALMACHINES = "virtualMachines";
-export const MONITORING_HOST_KEY_INSTANCEVIEW = "instanceView";
-export const MONITORING_HOST_KEY_STATUSES = "statuses";
-export const MONITORING_HOST_KEY_STATUSES_DISPLAYSTATUS = "displayStatus";
-
-export const MONITORING_VM_KEY_ID = "id";
-export const MONITORING_VM_KEY_NAME = "name";
-export const MONITORING_VM_KEY_LOCATION = "location";
-export const MONITORING_VM_KEY_PROPERTIES = "properties";
-export const MONITORING_VM_KEY_INSTANCEVIEW = "instanceView";
-export const MONITORING_VM_KEY_STATUSES = "statuses";
-export const MONITORING_VM_KEY_STATUSES_DISPLAYSTATUS = "displayStatus";
-
-export const MONITORING_HOST_STATUSES_KEY = "host";
-export const MONITORING_HOST_STATUSES_AVAILABLE = "Host available";
-export const MONITORING_vm_STATUSES_KEY = "vm";
-export const MONITORING_VM_STATUSES_RUNNING = "VM running";
-export const MONITORING_VM_STATUSES_STARTING = "VM starting";
-export const MONITORING_VM_STATUSES_STOPPING = "VM stopping";
-export const MONITORING_VM_STATUSES_STOPPED = "VM stopped";
-export const MONITORING_VM_STATUSES_DEALLOCATED = "VM deallocated";
-export const MONITORING_VM_STATUSES_DEALLOCATING = "VM deallocating";
+export const enum MonitoringHostConstant {
+  MONITORING_HOST_KEY_ID = "id",
+  MONITORING_HOST_KEY_NAME = "name",
+  MONITORING_HOST_KEY_SKU = "sku",
+  MONITORING_HOST_KEY_SKU_NAME = "name",
+  MONITORING_HOST_KEY_SKU_LOCATION = "location",
+  MONITORING_HOST_KEY_PROPERTIES = "properties",
+  MONITORING_HOST_KEY_VIRTUALMACHINES = "virtualMachines",
+  MONITORING_HOST_KEY_INSTANCEVIEW = "instanceView",
+  MONITORING_HOST_KEY_STATUSES = "statuses",
+  MONITORING_HOST_KEY_STATUSES_DISPLAYSTATUS = "displayStatus",
+}
+export const enum MonitoringHostStatusesConstant {
+  MONITORING_HOST_STATUSES_KEY = "host",
+  MONITORING_HOST_STATUSES_AVAILABLE = "Host available",
+}
+export const enum MonitoringVMConstant {
+  MONITORING_VM_KEY_ID = "id",
+  MONITORING_VM_KEY_NAME = "name",
+  MONITORING_VM_KEY_LOCATION = "location",
+  MONITORING_VM_KEY_PROPERTIES = "properties",
+  MONITORING_VM_KEY_INSTANCEVIEW = "instanceView",
+  MONITORING_VM_KEY_STATUSES = "statuses",
+  MONITORING_VM_KEY_STATUSES_DISPLAYSTATUS = "displayStatus",
+}
+export const enum MonitoringVMStatusesConstant {
+  MONITORING_vm_STATUSES_KEY = "vm",
+  MONITORING_VM_STATUSES_RUNNING = "VM running",
+  MONITORING_VM_STATUSES_STARTING = "VM starting",
+  MONITORING_VM_STATUSES_STOPPING = "VM stopping",
+  MONITORING_VM_STATUSES_STOPPED = "VM stopped",
+  MONITORING_VM_STATUSES_DEALLOCATED = "VM deallocated",
+  MONITORING_VM_STATUSES_DEALLOCATING = "VM deallocating",
+}

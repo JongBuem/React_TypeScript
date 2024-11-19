@@ -9,7 +9,7 @@ import { ScheduleRefreshButton } from "./Item";
 import { scheduleListStore } from "global/schedule";
 import { GetScheduleInfo } from "pages/schedule";
 import { ScheduleInfo } from "common/class/schedule";
-import SC from "common/constants/schedule.constant";
+import { ScheduleConstant } from "common/constants";
 
 import { ScheduleData } from "../types";
 
@@ -70,12 +70,15 @@ export default function InfoContents() {
                   <span
                     className={clsx("st", {
                       available:
-                        scheduleInfo && scheduleInfo[SC.SCHEDULE_KEY_STATE],
+                        scheduleInfo &&
+                        scheduleInfo[ScheduleConstant.SCHEDULE_KEY_STATE],
                     })}
                   ></span>
                 </div>
                 <h5>
-                  {(scheduleInfo && scheduleInfo[SC.SCHEDULE_KEY_NAME]) ?? ""}
+                  {(scheduleInfo &&
+                    scheduleInfo[ScheduleConstant.SCHEDULE_KEY_NAME]) ??
+                    ""}
                 </h5>
               </div>
             </div>

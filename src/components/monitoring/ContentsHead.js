@@ -1,12 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { MonitoringStatus } from 'common/class/monitoring';
+import React from "react";
+import PropTypes from "prop-types";
+import { MonitoringStatus } from "common/class/monitoring";
 import {
-  MONITORING_HOST_STATUSES_KEY,
-  MONITORING_vm_STATUSES_KEY,
-  MONITORING_HOST_STATUSES_AVAILABLE,
-  MONITORING_VM_STATUSES_RUNNING,
-} from 'common/constants/monitoring.constant';
+  MonitoringHostStatusesConstant,
+  MonitoringVMStatusesConstant,
+} from "common/constants";
 
 export default function ContentsHead({
   hostList,
@@ -21,25 +19,29 @@ export default function ContentsHead({
   React.useEffect(() => {
     const hostStatusInstance = new MonitoringStatus(
       hostList,
-      MONITORING_HOST_STATUSES_KEY,
+      MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_KEY
     );
     const result = hostStatusInstance.init(
       hostStatusInstance.list,
-      hostStatusInstance.type,
+      hostStatusInstance.type
     );
-    setHostCount(result[MONITORING_HOST_STATUSES_AVAILABLE]);
+    setHostCount(
+      result[MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE]
+    );
   }, [hostList]);
 
   React.useEffect(() => {
     const VmStatusInstance = new MonitoringStatus(
       vmList,
-      MONITORING_vm_STATUSES_KEY,
+      MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY
     );
     const result = VmStatusInstance.init(
       VmStatusInstance.list,
-      VmStatusInstance.type,
+      VmStatusInstance.type
     );
-    setVmCount(result[MONITORING_VM_STATUSES_RUNNING]);
+    setVmCount(
+      result[MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING]
+    );
   }, [vmList]);
 
   return (
@@ -105,25 +107,25 @@ export const MonitoringSubscriptionInput = React.memo(
         value={select}
         className="fm-control"
         style={{
-          width: '270px',
-          height: '30px',
-          padding: '5px',
-          background: '#0065CC',
-          color: '#FFFF',
+          width: "270px",
+          height: "30px",
+          padding: "5px",
+          background: "#0065CC",
+          color: "#FFFF",
         }}
         onChange={SelectHandleChange}
       >
-        <option value="" disabled style={{ color: '#92A6D0' }}>
+        <option value="" disabled style={{ color: "#92A6D0" }}>
           선택
         </option>
         {subscriptionIds.map((v, i) => (
-          <option key={i} value={v?.id ?? ''}>
-            {v?.id ?? ''}
+          <option key={i} value={v?.id ?? ""}>
+            {v?.id ?? ""}
           </option>
         ))}
       </select>
     );
-  },
+  }
 );
 
 ContentsHead.propTypes = {

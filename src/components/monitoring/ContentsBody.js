@@ -1,12 +1,7 @@
-import React from 'react';
-import { Items, ItemsLoading } from './ContentsBodyItems';
-import {
-  MONITORING_HOST_KEY_NAME,
-  MONITORING_HOST_KEY_SKU,
-  MONITORING_HOST_KEY_STATUSES,
-  MONITORING_HOST_KEY_VIRTUALMACHINES,
-} from 'common/constants/monitoring.constant';
-import PropTypes from 'prop-types';
+import React from "react";
+import { Items, ItemsLoading } from "./ContentsBodyItems";
+import { MonitoringHostConstant } from "common/constants";
+import PropTypes from "prop-types";
 
 function ContentsBody({ dataList, hostListLoading, vmListLoading }) {
   const data = JSON.parse(dataList);
@@ -22,11 +17,15 @@ function ContentsBody({ dataList, hostListLoading, vmListLoading }) {
               data[0]?.map((v, i) => (
                 <Items
                   key={i}
-                  hostName={v[MONITORING_HOST_KEY_NAME]}
-                  skuName={v[MONITORING_HOST_KEY_SKU]}
-                  hostStatus={v[MONITORING_HOST_KEY_STATUSES]}
+                  hostName={v[MonitoringHostConstant.MONITORING_HOST_KEY_NAME]}
+                  skuName={v[MonitoringHostConstant.MONITORING_HOST_KEY_SKU]}
+                  hostStatus={
+                    v[MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES]
+                  }
                   vm={JSON.stringify(
-                    v[MONITORING_HOST_KEY_VIRTUALMACHINES] ?? [],
+                    v[
+                      MonitoringHostConstant.MONITORING_HOST_KEY_VIRTUALMACHINES
+                    ] ?? []
                   )}
                 />
               ))}
@@ -40,11 +39,15 @@ function ContentsBody({ dataList, hostListLoading, vmListLoading }) {
               data[1]?.map((v, i) => (
                 <Items
                   key={i}
-                  hostName={v[MONITORING_HOST_KEY_NAME]}
-                  skuName={v[MONITORING_HOST_KEY_SKU]}
-                  hostStatus={v[MONITORING_HOST_KEY_STATUSES]}
+                  hostName={v[MonitoringHostConstant.MONITORING_HOST_KEY_NAME]}
+                  skuName={v[MonitoringHostConstant.MONITORING_HOST_KEY_SKU]}
+                  hostStatus={
+                    v[MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES]
+                  }
                   vm={JSON.stringify(
-                    v[MONITORING_HOST_KEY_VIRTUALMACHINES] ?? [],
+                    v[
+                      MonitoringHostConstant.MONITORING_HOST_KEY_VIRTUALMACHINES
+                    ] ?? []
                   )}
                 />
               ))}
