@@ -1,5 +1,11 @@
 # React_TypeScript
 
+- 11월 19일
+
+  - 진행 파일: monitoring.constant.ts, log.constant.ts, class/monitoring.ts
+  - 모든 constant파일 const enum으로 변경
+  - class/schedule변경을 위해서 class/monitoring부터 작업 예정
+
 - 11월 18일
 
   - 진행 파일: schedule.constant.ts, pages/schedule/components/HeadContents.tsx, pages/schedule/types
