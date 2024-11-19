@@ -9,7 +9,7 @@ import {
   // TabLogSelects,
 } from "./Item";
 
-import { ScheduleConstant } from "common/constants/inex";
+import { ScheduleConstant } from "common/constants";
 
 import { TabPanelProps, CustomTabProps } from "../types";
 

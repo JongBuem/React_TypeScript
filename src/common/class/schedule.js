@@ -1,15 +1,4 @@
-import {
-  MONITORING_HOST_KEY_ID,
-  MONITORING_HOST_KEY_NAME,
-  MONITORING_HOST_KEY_SKU,
-  MONITORING_HOST_KEY_SKU_NAME,
-  MONITORING_HOST_KEY_SKU_LOCATION,
-  MONITORING_HOST_KEY_PROPERTIES,
-  MONITORING_HOST_KEY_INSTANCEVIEW,
-  MONITORING_HOST_KEY_STATUSES,
-  MONITORING_HOST_KEY_STATUSES_DISPLAYSTATUS,
-} from "common/constants/monitoring.constant";
-import { ScheduleConstant } from "common/constants/inex";
+import { ScheduleConstant, MonitoringHostConstant } from "common/constants";
 import { MonitoringHostDATA } from "./monitoring";
 
 export class ScheduleHostDATA extends MonitoringHostDATA {
@@ -17,34 +6,43 @@ export class ScheduleHostDATA extends MonitoringHostDATA {
     super(result);
   }
   getObj(objValue) {
-    const id = this.getValue([MONITORING_HOST_KEY_ID], objValue);
-    const name = this.getValue([MONITORING_HOST_KEY_NAME], objValue);
+    const id = this.getValue(
+      [MonitoringHostConstant.MONITORING_HOST_KEY_ID],
+      objValue
+    );
+    const name = this.getValue(
+      [MonitoringHostConstant.MONITORING_HOST_KEY_NAME],
+      objValue
+    );
     const skuName = this.getValue(
-      [MONITORING_HOST_KEY_SKU, MONITORING_HOST_KEY_SKU_NAME],
+      [
+        MonitoringHostConstant.MONITORING_HOST_KEY_SKU,
+        MonitoringHostConstant.MONITORING_HOST_KEY_SKU_NAME,
+      ],
       objValue
     );
     const location = this.getValue(
-      [MONITORING_HOST_KEY_SKU_LOCATION],
+      [MonitoringHostConstant.MONITORING_HOST_KEY_SKU_LOCATION],
       objValue
     );
     const statuses = this.getValue(
       [
-        MONITORING_HOST_KEY_PROPERTIES,
-        MONITORING_HOST_KEY_INSTANCEVIEW,
-        MONITORING_HOST_KEY_STATUSES,
+        MonitoringHostConstant.MONITORING_HOST_KEY_PROPERTIES,
+        MonitoringHostConstant.MONITORING_HOST_KEY_INSTANCEVIEW,
+        MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES,
       ],
       objValue,
       [{}]
     );
 
     return {
-      [MONITORING_HOST_KEY_ID]: id,
-      [MONITORING_HOST_KEY_NAME]: name,
-      [MONITORING_HOST_KEY_SKU]: skuName,
-      [MONITORING_HOST_KEY_SKU_LOCATION]: location,
-      [MONITORING_HOST_KEY_STATUSES]:
+      [MonitoringHostConstant.MONITORING_HOST_KEY_ID]: id,
+      [MonitoringHostConstant.MONITORING_HOST_KEY_NAME]: name,
+      [MonitoringHostConstant.MONITORING_HOST_KEY_SKU]: skuName,
+      [MonitoringHostConstant.MONITORING_HOST_KEY_SKU_LOCATION]: location,
+      [MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES]:
         statuses[statuses.length - 1][
-          MONITORING_HOST_KEY_STATUSES_DISPLAYSTATUS
+          MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES_DISPLAYSTATUS
         ],
     };
   }

@@ -43,3 +43,11 @@ export interface HostData {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface HostDataMonitoringData {
+  id: string;
+  name: string;
+  sku: Array<any>;
+  location: string;
+  statuses: string;
+}

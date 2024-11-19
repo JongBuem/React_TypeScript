@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { scheduleListStore } from "global/schedule";
 import SimpleBar from "simplebar-react";
-import { ScheduleConstant } from "common/constants/inex";
+import { ScheduleConstant } from "common/constants";
 import { ScheduleData } from "../types";
 
 function LeftContents() {

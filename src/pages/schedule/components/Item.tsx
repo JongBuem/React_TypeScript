@@ -23,41 +23,26 @@ import {
   scheduleLogStore,
 } from "global/schedule";
 import { customerStore } from "global/customer";
-import { ScheduleConstant } from "common/constants/inex";
 import {
-  MONITORING_HOST_KEY_NAME,
-  MONITORING_HOST_KEY_SKU,
-  MONITORING_HOST_KEY_SKU_LOCATION,
-  MONITORING_HOST_KEY_STATUSES,
-} from "common/constants/monitoring.constant";
+  ScheduleConstant,
+  MonitoringHostConstant,
+  LogConstant,
+} from "common/constants";
 import {
   LogData,
   ViewLogData,
-  LOG_KEY_ACTION,
-  LOG_KEY_STATUS,
-  LOG_KEY_JOBCOUNT,
-  LOG_KEY_HOSTINFO,
-  LOG_KEY_CREATEDAT,
-  LOG_KEY_DESCRIPTION,
-  LOG_HOST_KEY_SKU,
-  LOG_HOST_KEY_LOCATION,
-  LOG_HOST_KEY_OLDNAME,
-  LOG_HOST_KEY_NEWNAME,
-} from "common/constants/log.constant";
-import {
+  HostDataMonitoringData,
   ScheduleInfoProps,
   TapProps,
   ScheduleInformationStatusInputInputProps,
   ScheduleInformationSubscriptionInputInputProps,
   ScheduleInformationDateInputInputProps,
-  ScheduleInformationRepeatedInputValue,
   ScheduleInformationRepeatedInputProps,
   EditHostInformationProps,
   ScheduleHostLogProps,
   TabHostLogSelectsProps,
 } from "../types";
 import { GetScheduleLog, GetSchedule } from "pages/schedule";
-import { MonitoringData } from "pages/monitoring/types/index";
 
 export const Tab = React.memo(function Tab({ title }: TapProps) {
   return (
@@ -586,7 +571,9 @@ export const EditHostInformation = React.memo(function EditHostInformation({
 
   React.useEffect(() => {
     if (allCheck && hostList?.length > 0)
-      setCheck(hostList.map((v) => v[MONITORING_HOST_KEY_NAME]));
+      setCheck(
+        hostList.map((v) => v[MonitoringHostConstant.MONITORING_HOST_KEY_NAME])
+      );
     else if (!allCheck && hostList?.length > 0) {
       if (hostList?.length === check?.length) setCheck([]);
     } else if (hostList?.length === 0) setCheck([]);
@@ -613,7 +600,7 @@ export const EditHostInformation = React.memo(function EditHostInformation({
     }
   };
 
-  const subscriptions: MonitoringData[] = hostList;
+  const subscriptions: HostDataMonitoringData[] = hostList;
   const HostTableList = subscriptions.map((value, index) => (
     <tr key={value?.id ?? index}>
       <td className="align-center">
@@ -621,20 +608,35 @@ export const EditHostInformation = React.memo(function EditHostInformation({
           <input
             type="checkbox"
             name="selectRow"
-            onChange={(e) => ChekHandler(e, value[MONITORING_HOST_KEY_NAME])}
+            onChange={(e) =>
+              ChekHandler(
+                e,
+                value[MonitoringHostConstant.MONITORING_HOST_KEY_NAME]
+              )
+            }
             checked={
-              check.indexOf(value[MONITORING_HOST_KEY_NAME]) > -1 ? true : false
+              check.indexOf(
+                value[MonitoringHostConstant.MONITORING_HOST_KEY_NAME]
+              ) > -1
+                ? true
+                : false
             }
           />
           <span className="mark"></span>
         </label>
       </td>
-      <td className="align-center">{value[MONITORING_HOST_KEY_NAME]}</td>
-      <td className="align-center">{value[MONITORING_HOST_KEY_SKU]}</td>
       <td className="align-center">
-        {value[MONITORING_HOST_KEY_SKU_LOCATION]}
+        {value[MonitoringHostConstant.MONITORING_HOST_KEY_NAME]}
       </td>
-      <td className="align-center">{value[MONITORING_HOST_KEY_STATUSES]}</td>
+      <td className="align-center">
+        {value[MonitoringHostConstant.MONITORING_HOST_KEY_SKU]}
+      </td>
+      <td className="align-center">
+        {value[MonitoringHostConstant.MONITORING_HOST_KEY_SKU_LOCATION]}
+      </td>
+      <td className="align-center">
+        {value[MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES]}
+      </td>
     </tr>
   ));
 
@@ -715,7 +717,9 @@ export const HostInformation = React.memo(function HostInformation() {
 
   React.useEffect(() => {
     if (allCheck && hostList?.length > 0)
-      setCheck(hostList.map((v) => v[MONITORING_HOST_KEY_NAME]));
+      setCheck(
+        hostList.map((v) => v[MonitoringHostConstant.MONITORING_HOST_KEY_NAME])
+      );
     else if (!allCheck && hostList?.length > 0) {
       if (hostList?.length === check?.length) setCheck([]);
     } else if (hostList?.length === 0) setCheck([]);
@@ -732,7 +736,7 @@ export const HostInformation = React.memo(function HostInformation() {
     }
   };
 
-  const subscriptions: MonitoringData[] = hostList;
+  const subscriptions: HostDataMonitoringData[] = hostList;
   const HostTableList = subscriptions.map((value, index) => (
     <tr key={value?.id ?? index}>
       <td className="align-center">
@@ -740,20 +744,35 @@ export const HostInformation = React.memo(function HostInformation() {
           <input
             type="checkbox"
             name="selectRow"
-            onChange={(e) => ChekHandler(e, value[MONITORING_HOST_KEY_NAME])}
+            onChange={(e) =>
+              ChekHandler(
+                e,
+                value[MonitoringHostConstant.MONITORING_HOST_KEY_NAME]
+              )
+            }
             checked={
-              check.indexOf(value[MONITORING_HOST_KEY_NAME]) > -1 ? true : false
+              check.indexOf(
+                value[MonitoringHostConstant.MONITORING_HOST_KEY_NAME]
+              ) > -1
+                ? true
+                : false
             }
           />
           <span className="mark"></span>
         </label>
       </td>
-      <td className="align-center">{value[MONITORING_HOST_KEY_NAME]}</td>
-      <td className="align-center">{value[MONITORING_HOST_KEY_SKU]}</td>
       <td className="align-center">
-        {value[MONITORING_HOST_KEY_SKU_LOCATION]}
+        {value[MonitoringHostConstant.MONITORING_HOST_KEY_NAME]}
       </td>
-      <td className="align-center">{value[MONITORING_HOST_KEY_STATUSES]}</td>
+      <td className="align-center">
+        {value[MonitoringHostConstant.MONITORING_HOST_KEY_SKU]}
+      </td>
+      <td className="align-center">
+        {value[MonitoringHostConstant.MONITORING_HOST_KEY_SKU_LOCATION]}
+      </td>
+      <td className="align-center">
+        {value[MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES]}
+      </td>
     </tr>
   ));
 
@@ -847,7 +866,7 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
 
   React.useEffect(() => {
     const jobCountCheck = (v: LogData): boolean => {
-      if (v[LOG_KEY_JOBCOUNT] === jobCount) return true;
+      if (v[LogConstant.LOG_KEY_JOBCOUNT] === jobCount) return true;
       else return false;
     };
 
@@ -869,7 +888,9 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
       const hostLoglist = hostLogInstance.init(hostLogInstance.data);
       const hostLoglists: ViewLogData[] = hostLoglist;
       const sortlist = hostLoglists.sort((a, b) =>
-        a[LOG_HOST_KEY_OLDNAME].localeCompare(b[LOG_HOST_KEY_OLDNAME])
+        a[LogConstant.LOG_HOST_KEY_OLDNAME].localeCompare(
+          b[LogConstant.LOG_HOST_KEY_OLDNAME]
+        )
       );
       setLog(sortlist);
     }
@@ -897,14 +918,16 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
             {log.map((v, i) => (
               <tr key={i}>
                 <td className="align-center">
-                  {v[LOG_HOST_KEY_OLDNAME] ?? ""}
+                  {v[LogConstant.LOG_HOST_KEY_OLDNAME] ?? ""}
                 </td>
                 <td className="align-center">
-                  {text(v[LOG_HOST_KEY_NEWNAME]) ?? ""}
+                  {text(v[LogConstant.LOG_HOST_KEY_NEWNAME]) ?? ""}
                 </td>
-                <td className="align-center">{v[LOG_HOST_KEY_SKU] ?? ""}</td>
                 <td className="align-center">
-                  {v[LOG_HOST_KEY_LOCATION] ?? ""}
+                  {v[LogConstant.LOG_HOST_KEY_SKU] ?? ""}
+                </td>
+                <td className="align-center">
+                  {v[LogConstant.LOG_HOST_KEY_LOCATION] ?? ""}
                 </td>
               </tr>
             ))}
@@ -921,7 +944,7 @@ export const TabHostLogSelects = React.memo(function TabHostLogSelects({
   const { scheduleHostLog, jobCount, setJobCount } = scheduleHostLogStore();
 
   const Deduplication = (array: LogData[]) => {
-    const allJobCounts = array.map((v) => v[LOG_KEY_JOBCOUNT]);
+    const allJobCounts = array.map((v) => v[LogConstant.LOG_KEY_JOBCOUNT]);
     const jobCounts = [...new Set(allJobCounts)];
     return jobCounts;
   };

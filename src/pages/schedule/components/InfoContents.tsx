@@ -9,7 +9,7 @@ import { ScheduleRefreshButton } from "./Item";
 import { scheduleListStore } from "global/schedule";
 import { GetScheduleInfo } from "pages/schedule";
 import { ScheduleInfo } from "common/class/schedule";
-import { ScheduleConstant } from "common/constants/inex";
+import { ScheduleConstant } from "common/constants";
 
 import { ScheduleData } from "../types";
 

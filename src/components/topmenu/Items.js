@@ -3,7 +3,7 @@ import clsx from "clsx";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { scheduleListStore } from "global/schedule";
-import { ScheduleConstant } from "common/constants/inex";
+import { ScheduleConstant } from "common/constants";
 import { GetSchedule } from "pages/schedule";
 import { customerStore } from "global/customer";
 
