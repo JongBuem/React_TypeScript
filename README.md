@@ -1,5 +1,11 @@
 # React_TypeScript
 
+- 11월 20일
+
+  - 진행 파일: class/monitoring.ts
+  - 해당 class에 많은 연관성이 얽혀있어 수정시 오류가 연쇄적으로 퍼져나가는중..
+  - 무턱대고 상속하고 class를 만드는 것이 올바른지 다시 생각하게됨
+
 - 11월 19일
 
   - 진행 파일: monitoring.constant.ts, log.constant.ts, class/monitoring.ts
