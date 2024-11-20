@@ -5,16 +5,32 @@ import {
   MonitoringVMStatusesConstant,
 } from "common/constants";
 // import { HostData } from "pages/schedule/types";
-// import { MonitoringData as MonitoringDataIF } from "pages/monitoring/types";
+// import { Monitoring } from "pages/monitoring/types";
 
-// interface MonitoringHostDATAInterface {
+// export interface MonitoringHostDATAInterface {
 //   data: {
 //     newHosts: HostData[] | null[];
 //     oldHosts: HostData[] | null[];
 //   };
 // }
-// interface MonitoringDataInterface {
-//   data: MonitoringDataIF[];
+
+// export interface MonitoringHostDATAInitInterface {
+//   id: string;
+//   name: string;
+//   sku: string;
+//   statuses: string;
+//   virtualMachines: any[];
+// }
+
+// export interface MonitoringVmDATAInterface {
+//   data: Monitoring[];
+// }
+
+// export interface MonitoringVmDATAInitInterface {
+//   id: string;
+//   location: string;
+//   name: string;
+//   statuses: string;
 // }
 
 // export class MonitoringHostDATA {
@@ -37,10 +53,10 @@ import {
 //   }
 
 //   get new() {
-//     return this.nameSort(this._new.filter((v) => v !== null));
+//     return this.nameSort(this._new?.filter((v) => v !== null));
 //   }
 //   get old() {
-//     return this.nameSort(this._old.filter((v) => v !== null));
+//     return this.nameSort(this._old?.filter((v) => v !== null));
 //   }
 
 //   get host() {
@@ -113,7 +129,7 @@ import {
 //     };
 //   }
 
-//   changeData(array: HostData[] | MonitoringDataIF[]) {
+//   changeData(array: HostData[]) {
 //     const result = array.map((v) => {
 //       const obj = this.getObj(v);
 //       return obj;
@@ -121,30 +137,46 @@ import {
 //     return result;
 //   }
 
-//   init(array: HostData[] | MonitoringDataIF[]) {
+//   init(array: HostData[]) {
 //     return this.changeData(array);
 //   }
 // }
 
-// export class MonitoringVmDATA extends MonitoringHostDATA {
-//   constructor(result) {
-//     super(result);
+// export class MonitoringVmDATA {
+//   public data: Monitoring[];
+
+//   constructor(result: MonitoringVmDATAInterface) {
+//     this.data = Array.isArray(result?.data) ? result?.data : [];
+//   }
+
+//   getValue(keys: string[], value: Record<string, any>, defaultValue: any = "") {
+//     try {
+//       let tempObj: any = {};
+//       for (const i of keys) {
+//         if (tempObj[i]) tempObj = tempObj[i];
+//         else if (value[i]) tempObj = value[i];
+//         else tempObj = defaultValue;
+//       }
+//       return tempObj;
+//     } catch {
+//       return defaultValue;
+//     }
 //   }
 
 //   getObj(objValue: Record<string, any>): Record<string, any> {
-//     const id = super.getValue(
+//     const id = this.getValue(
 //       [MonitoringVMConstant.MONITORING_VM_KEY_ID],
 //       objValue
 //     );
-//     const name = super.getValue(
+//     const name = this.getValue(
 //       [MonitoringVMConstant.MONITORING_VM_KEY_NAME],
 //       objValue
 //     );
-//     const location = super.getValue(
+//     const location = this.getValue(
 //       [MonitoringVMConstant.MONITORING_VM_KEY_LOCATION],
 //       objValue
 //     );
-//     const statuses = super.getValue(
+//     const statuses = this.getValue(
 //       [
 //         MonitoringVMConstant.MONITORING_VM_KEY_PROPERTIES,
 //         MonitoringVMConstant.MONITORING_VM_KEY_INSTANCEVIEW,
@@ -163,20 +195,41 @@ import {
 //         ],
 //     };
 //   }
+
+//   changeData(array: Monitoring[]) {
+//     const result = array.map((v) => {
+//       const obj = this.getObj(v);
+//       return obj;
+//     });
+//     return result;
+//   }
+
+//   init(array: Monitoring[]) {
+//     return this.changeData(array);
+//   }
 // }
 
 // export class MonitoringData {
-//   constructor(host, vm) {
+//   public host: MonitoringHostDATAInitInterface[];
+//   public vm: MonitoringVmDATAInitInterface[];
+
+//   constructor(
+//     host: MonitoringHostDATAInitInterface[],
+//     vm: MonitoringVmDATAInitInterface[]
+//   ) {
 //     this.host = Array.isArray(host) ? host : [];
 //     this.vm = Array.isArray(vm) ? vm : [];
 //   }
 
-//   findID(id1, id2) {
+//   findID(id1: string, id2: string) {
 //     if (id1.toUpperCase() === id2.toUpperCase()) return true;
 //     else return false;
 //   }
 
-//   gethostVm(hostVm = [], vm = []) {
+//   gethostVm(
+//     hostVm: MonitoringHostDATAInitInterface[] = [],
+//     vm: MonitoringVmDATAInitInterface[] = []
+//   ) {
 //     const result = hostVm.map((o) => {
 //       if (vm.find((p) => this.findID(p.id, o.id)))
 //         return vm.find((p) => this.findID(p.id, o.id));
@@ -185,7 +238,10 @@ import {
 //     return result;
 //   }
 
-//   changeData(parentArray, childArray) {
+//   changeData(
+//     parentArray: MonitoringHostDATAInitInterface[],
+//     childArray: MonitoringVmDATAInitInterface[]
+//   ) {
 //     const result = parentArray.map((v) => {
 //       const virtualMachines = this.gethostVm(
 //         v[MonitoringHostConstant.MONITORING_HOST_KEY_VIRTUALMACHINES],
@@ -199,7 +255,7 @@ import {
 //     return result;
 //   }
 
-//   arrayDivision(array, n) {
+//   arrayDivision(array: any[], n: number) {
 //     let arr = [...array];
 //     let len = arr.length;
 //     let cnt = Math.floor(len / n) + (Math.floor(len % n) > 0 ? 1 : 0);
@@ -210,7 +266,11 @@ import {
 //     return temp;
 //   }
 
-//   init(parentArray, childArray, division) {
+//   init(
+//     parentArray: MonitoringHostDATAInitInterface[],
+//     childArray: MonitoringVmDATAInitInterface[],
+//     division: boolean
+//   ) {
 //     const result = this.changeData(parentArray, childArray);
 //     if (division)
 //       return this.arrayDivision(
@@ -222,12 +282,15 @@ import {
 // }
 
 // export class MonitoringStatus {
-//   constructor(list, type) {
+//   public list: HostData[] | Monitoring[];
+//   public type: string;
+
+//   constructor(list: HostData[] | Monitoring[], type: string) {
 //     this.list = Array.isArray(list) ? list : [];
 //     this.type = type;
 //   }
 
-//   gethostAvailable(array) {
+//   gethostAvailable(array: MonitoringHostDATAInitInterface[]) {
 //     const result = array.filter(
 //       (v) =>
 //         v[MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES] ===
@@ -236,7 +299,7 @@ import {
 //     return result;
 //   }
 
-//   getVmRunning(array) {
+//   getVmRunning(array: MonitoringVmDATAInitInterface[]) {
 //     const result = array.filter(
 //       (v) =>
 //         v[MonitoringVMConstant.MONITORING_VM_KEY_STATUSES] ===
@@ -245,25 +308,28 @@ import {
 //     return result;
 //   }
 
-//   getHostStatus(array) {
+//   getHostStatus(array: MonitoringHostDATAInitInterface[]) {
 //     return {
 //       [MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE]:
 //         this.gethostAvailable(array),
 //     };
 //   }
 
-//   getVmStatus(array) {
+//   getVmStatus(array: MonitoringVmDATAInitInterface[]) {
 //     return {
 //       [MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING]:
 //         this.getVmRunning(array),
 //     };
 //   }
 
-//   init(array, type) {
+//   init(
+//     array: MonitoringHostDATAInitInterface[] | MonitoringVmDATAInitInterface[],
+//     type: string
+//   ) {
 //     if (type === MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_KEY)
-//       return this.getHostStatus(array);
+//       return this.getHostStatus(array as MonitoringHostDATAInitInterface[]);
 //     else if (type === MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY)
-//       return this.getVmStatus(array);
+//       return this.getVmStatus(array as MonitoringVmDATAInitInterface[]);
 //     else
 //       return {
 //         [MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE]: 0,
