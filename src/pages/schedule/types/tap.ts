@@ -19,5 +19,5 @@ export type CustomTabProps = {
     repeatCycleWeek: string;
     repeatCycleDay: string;
   };
-  hostData: HostData;
+  hostData: HostData[];
 };

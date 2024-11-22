@@ -4,10 +4,29 @@ import {
   MonitoringVMConstant,
   MonitoringVMStatusesConstant,
 } from "common/constants";
+import { HostData } from "pages/schedule/types";
+import { Monitoring, HostList, VmList } from "pages/monitoring/types";
+
+export interface MonitoringHostDATAInterface {
+  data: {
+    newHosts: HostData[];
+    oldHosts: HostData[];
+  };
+}
+
+export interface MonitoringVmDATAInterface {
+  data: Monitoring[];
+}
 
 export class MonitoringHostDATA {
-  constructor(result) {
-    this.data = Array.isArray(result?.data) ? result?.data : [];
+  public data: [] | { newHosts: HostData[]; oldHosts: HostData[] };
+  private _new: HostData[];
+  private _old: HostData[];
+
+  constructor(result: MonitoringHostDATAInterface) {
+    this.data = Array.isArray(result?.data)
+      ? result?.data
+      : { newHosts: [], oldHosts: [] };
     this._new = Array.isArray(result?.data?.newHosts)
       ? result?.data?.newHosts
       : [];
@@ -20,21 +39,21 @@ export class MonitoringHostDATA {
     return this.nameSort(this._new);
   }
   get old() {
-    return this.nameSort(this._old.filter((v) => v));
+    return this.nameSort(this._old);
   }
 
   get host() {
     return this.old.concat(this.new);
   }
 
-  nameSort(array) {
+  nameSort(array: HostData[]) {
     const result = array.sort((a, b) => a?.name.localeCompare(b?.name));
     return result;
   }
 
-  getValue(keys = [], value = {}, defaultValue = "") {
+  getValue(keys: string[], value: Record<string, any>, defaultValue: any = "") {
     try {
-      let tempObj = {};
+      let tempObj: any = {};
       for (const i of keys) {
         if (tempObj[i]) tempObj = tempObj[i];
         else if (value[i]) tempObj = value[i];
@@ -46,7 +65,7 @@ export class MonitoringHostDATA {
     }
   }
 
-  getObj(objValue) {
+  getObj(objValue: Record<string, any>): Record<string, any> {
     const id = this.getValue(
       [MonitoringHostConstant.MONITORING_HOST_KEY_ID],
       objValue
@@ -93,7 +112,7 @@ export class MonitoringHostDATA {
     };
   }
 
-  changeData(array) {
+  changeData(array: HostData[]) {
     const result = array.map((v) => {
       const obj = this.getObj(v);
       return obj;
@@ -101,30 +120,46 @@ export class MonitoringHostDATA {
     return result;
   }
 
-  init(array) {
+  init(array: HostData[]) {
     return this.changeData(array);
   }
 }
 
-export class MonitoringVmDATA extends MonitoringHostDATA {
-  constructor(result) {
-    super(result);
+export class MonitoringVmDATA {
+  public data: Monitoring[];
+
+  constructor(result: MonitoringVmDATAInterface) {
+    this.data = Array.isArray(result?.data) ? result?.data : [];
   }
 
-  getObj(objValue) {
-    const id = super.getValue(
+  getValue(keys: string[], value: Record<string, any>, defaultValue: any = "") {
+    try {
+      let tempObj: any = {};
+      for (const i of keys) {
+        if (tempObj[i]) tempObj = tempObj[i];
+        else if (value[i]) tempObj = value[i];
+        else tempObj = defaultValue;
+      }
+      return tempObj;
+    } catch {
+      return defaultValue;
+    }
+  }
+
+  getObj(objValue: Record<string, any>): Record<string, any> {
+    const id = this.getValue(
       [MonitoringVMConstant.MONITORING_VM_KEY_ID],
       objValue
     );
-    const name = super.getValue(
+    const name = this.getValue(
       [MonitoringVMConstant.MONITORING_VM_KEY_NAME],
       objValue
     );
-    const location = super.getValue(
+    const location = this.getValue(
       [MonitoringVMConstant.MONITORING_VM_KEY_LOCATION],
       objValue
     );
-    const statuses = super.getValue(
+    const statuses = this.getValue(
       [
         MonitoringVMConstant.MONITORING_VM_KEY_PROPERTIES,
         MonitoringVMConstant.MONITORING_VM_KEY_INSTANCEVIEW,
@@ -143,20 +178,35 @@ export class MonitoringVmDATA extends MonitoringHostDATA {
         ],
     };
   }
+
+  changeData(array: Monitoring[]) {
+    const result = array.map((v) => {
+      const obj = this.getObj(v);
+      return obj;
+    });
+    return result;
+  }
+
+  init(array: Monitoring[]) {
+    return this.changeData(array);
+  }
 }
 
 export class MonitoringData {
-  constructor(host, vm) {
+  public host: HostList[];
+  public vm: VmList[];
+
+  constructor(host: HostList[], vm: VmList[]) {
     this.host = Array.isArray(host) ? host : [];
     this.vm = Array.isArray(vm) ? vm : [];
   }
 
-  findID(id1, id2) {
+  findID(id1: string, id2: string) {
     if (id1.toUpperCase() === id2.toUpperCase()) return true;
     else return false;
   }
 
-  gethostVm(hostVm = [], vm = []) {
+  gethostVm(hostVm: HostList[] = [], vm: VmList[] = []) {
     const result = hostVm.map((o) => {
       if (vm.find((p) => this.findID(p.id, o.id)))
         return vm.find((p) => this.findID(p.id, o.id));
@@ -165,7 +215,7 @@ export class MonitoringData {
     return result;
   }
 
-  changeData(parentArray, childArray) {
+  changeData(parentArray: HostList[], childArray: VmList[]) {
     const result = parentArray.map((v) => {
       const virtualMachines = this.gethostVm(
         v[MonitoringHostConstant.MONITORING_HOST_KEY_VIRTUALMACHINES],
@@ -179,7 +229,7 @@ export class MonitoringData {
     return result;
   }
 
-  arrayDivision(array, n) {
+  arrayDivision(array: any[], n: number) {
     let arr = [...array];
     let len = arr.length;
     let cnt = Math.floor(len / n) + (Math.floor(len % n) > 0 ? 1 : 0);
@@ -190,24 +240,28 @@ export class MonitoringData {
     return temp;
   }
 
-  init(parentArray, childArray, division) {
+  init(parentArray: HostList[], childArray: VmList[], division: boolean) {
     const result = this.changeData(parentArray, childArray);
     if (division)
       return this.arrayDivision(
         result,
         Math.abs(Math.round(result?.length / 2))
       );
+
     return result;
   }
 }
 
 export class MonitoringStatus {
-  constructor(list, type) {
+  public list: HostData[] | Monitoring[];
+  public type: string;
+
+  constructor(list: HostData[] | Monitoring[], type: string) {
     this.list = Array.isArray(list) ? list : [];
     this.type = type;
   }
 
-  gethostAvailable(array) {
+  gethostAvailable(array: HostList[]) {
     const result = array.filter(
       (v) =>
         v[MonitoringHostConstant.MONITORING_HOST_KEY_STATUSES] ===
@@ -216,7 +270,7 @@ export class MonitoringStatus {
     return result;
   }
 
-  getVmRunning(array) {
+  getVmRunning(array: VmList[]) {
     const result = array.filter(
       (v) =>
         v[MonitoringVMConstant.MONITORING_VM_KEY_STATUSES] ===
@@ -225,25 +279,25 @@ export class MonitoringStatus {
     return result;
   }
 
-  getHostStatus(array) {
+  getHostStatus(array: HostList[]) {
     return {
       [MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE]:
         this.gethostAvailable(array),
     };
   }
 
-  getVmStatus(array) {
+  getVmStatus(array: VmList[]) {
     return {
       [MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING]:
         this.getVmRunning(array),
     };
   }
 
-  init(array, type) {
+  init(array: HostList[] | VmList[], type: string) {
     if (type === MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_KEY)
-      return this.getHostStatus(array);
+      return this.getHostStatus(array as HostList[]);
     else if (type === MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY)
-      return this.getVmStatus(array);
+      return this.getVmStatus(array as VmList[]);
     else
       return {
         [MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE]: 0,

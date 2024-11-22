@@ -41,6 +41,7 @@ import {
   EditHostInformationProps,
   ScheduleHostLogProps,
   TabHostLogSelectsProps,
+  ScheduleHostData,
 } from "../types";
 import { GetScheduleLog, GetSchedule } from "pages/schedule";
 
@@ -534,8 +535,8 @@ export const EditHostInformation = React.memo(function EditHostInformation({
   const { setNewCheckHostList } = hostStore();
   const [scheduleInfoCheck, setScheduleInfoCheck] = React.useState(false); //scheduleInfo의 host데이터 상태
   const [allCheck, setAllCheck] = React.useState(false);
-  const [check, setCheck] = React.useState<Array<string>>([]);
-  const [hostList, setHostList] = React.useState([]);
+  const [check, setCheck] = React.useState<string[]>([]);
+  const [hostList, setHostList] = React.useState<ScheduleHostData[]>([]);
   const { data, isLoading, isError } = GetHost({
     refreshInterval: 70000,
     subscriptionId: selectSubscription,
@@ -543,7 +544,7 @@ export const EditHostInformation = React.memo(function EditHostInformation({
   });
 
   const GetHostList = async (result: SWRResponse) => {
-    const dataArray = result.data ? result : { data: result };
+    const dataArray = result.data ? result.data : result;
     const hostInstance = new ScheduleHostDATA(dataArray);
     const hostlist = hostInstance.init(hostInstance.data);
     setHostList(hostlist);
@@ -600,7 +601,7 @@ export const EditHostInformation = React.memo(function EditHostInformation({
     }
   };
 
-  const subscriptions: HostDataMonitoringData[] = hostList;
+  const subscriptions: ScheduleHostData[] = hostList;
   const HostTableList = subscriptions.map((value, index) => (
     <tr key={value?.id ?? index}>
       <td className="align-center">
@@ -683,7 +684,7 @@ export const HostInformation = React.memo(function HostInformation() {
   const { setNewCheckHostList } = hostStore();
   const [allCheck, setAllCheck] = React.useState(true);
   const [check, setCheck] = React.useState<any[]>([]);
-  const [hostList, setHostList] = React.useState([]);
+  const [hostList, setHostList] = React.useState<ScheduleHostData[]>([]);
   const { data, isLoading, isError } = GetHost({
     refreshInterval: 70000,
     subscriptionId: selectSubscription,
@@ -691,7 +692,7 @@ export const HostInformation = React.memo(function HostInformation() {
   });
 
   const GetHostList = async (result: SWRResponse) => {
-    const dataArray = result.data ? result : { data: result };
+    const dataArray = result.data ? result.data : result;
     const hostInstance = new ScheduleHostDATA(dataArray);
     const hostlist = hostInstance.init(hostInstance.data);
     setHostList(hostlist);
@@ -736,7 +737,7 @@ export const HostInformation = React.memo(function HostInformation() {
     }
   };
 
-  const subscriptions: HostDataMonitoringData[] = hostList;
+  const subscriptions: ScheduleHostData[] = hostList;
   const HostTableList = subscriptions.map((value, index) => (
     <tr key={value?.id ?? index}>
       <td className="align-center">
@@ -859,7 +860,6 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
       setScheduleHostLog([]);
     } else if (!isLoading && !isError) {
       const arry = data?.data?.items ? data?.data?.items : data?.items;
-      console.log(arry);
       setScheduleHostLog(arry);
     }
   }, [data, isLoading, isError]);
@@ -871,7 +871,7 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
     };
 
     const findObj = (array: LogData[], value: string) => {
-      const result = array.find((v) => v.resourceId === value) ?? {};
+      const result = array.find((v) => v.resourceId === value) ?? undefined;
       return result;
     };
 
@@ -881,18 +881,18 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
       const resourceIds: string[] = array
         .map((v) => v.resourceId)
         .filter((v) => v);
-      const uniqueResourceIds = [...new Set(resourceIds)];
-      const result = uniqueResourceIds.map((v) => findObj(array, v));
 
-      const hostLogInstance = new ScheduleHostLogDATA(result);
-      const hostLoglist = hostLogInstance.init(hostLogInstance.data);
-      const hostLoglists: ViewLogData[] = hostLoglist;
-      const sortlist = hostLoglists.sort((a, b) =>
-        a[LogConstant.LOG_HOST_KEY_OLDNAME].localeCompare(
-          b[LogConstant.LOG_HOST_KEY_OLDNAME]
-        )
-      );
-      setLog(sortlist);
+      // const uniqueResourceIds = [...new Set(resourceIds)];
+      // const result = uniqueResourceIds?.map((v) => findObj(array, v)).filter((v) => v);
+      // const hostLogInstance = new ScheduleHostLogDATA(result);
+      // const hostLoglist = hostLogInstance.init(hostLogInstance.data);
+      // const hostLoglists: ViewLogData[] = hostLoglist;
+      // const sortlist = hostLoglists.sort((a, b) =>
+      //   a[LogConstant.LOG_HOST_KEY_OLDNAME].localeCompare(
+      //     b[LogConstant.LOG_HOST_KEY_OLDNAME]
+      //   )
+      // );
+      // setLog(sortlist);
     }
   }, [scheduleHostLog, jobCount]);
 
