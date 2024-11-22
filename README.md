@@ -1,5 +1,22 @@
 # React_TypeScript
 
+- 11월 22일
+
+  - 진행 파일: class/monitoring.ts, class/schedule.ts, class/log.ts
+  - class의 상속으로 발생하는 오류 제거
+  - 부모 class에 super로 전달할 때 자식class는 부모clas의 생성자와 타입이 일치해야한다.
+  - 정리하자면 생성자간의 타입이 일치해야한다
+
+```javascript
+export class ScheduleHostDATA extends MonitoringHostDATA {
+  constructor(result: MonitoringHostDATAInterface) {
+    super(result); // 부모 클래스 생성자 호출
+  }
+....
+
+}
+```
+
 - 11월 20일
 
   - 진행 파일: class/monitoring.ts
