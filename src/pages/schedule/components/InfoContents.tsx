@@ -54,12 +54,50 @@ export default function InfoContents() {
         </div>
       </div>
     );
-  } else if (scheduleInfo || scheduleInfo === null) {
-    const data = scheduleInfo !== null ? scheduleInfo : {};
-    const classObj = new ScheduleInfo(data);
+  } else if (scheduleInfo === null) {
+    return (
+      <div className="area-sub">
+        <div className="inner">
+          <div className="dp-flex">
+            <div className="mr-auto">
+              <div className="dp-flex">
+                <div className="st-wrap">
+                  <span
+                    className={clsx("st", {
+                      available:
+                        scheduleInfo &&
+                        scheduleInfo[ScheduleConstant.SCHEDULE_KEY_STATE],
+                    })}
+                  ></span>
+                </div>
+                <h5>
+                  {(scheduleInfo &&
+                    scheduleInfo[ScheduleConstant.SCHEDULE_KEY_NAME]) ??
+                    ""}
+                </h5>
+              </div>
+            </div>
+            <div className="ml-auto">
+              <div className="btn-wrap">
+                <Link
+                  className="btn btn-outline"
+                  to={`/schedule/info/${id}/edit`}
+                >
+                  수정
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="space-20"></div>
+
+          <div className="space-20"></div>
+        </div>
+      </div>
+    );
+  } else if (scheduleInfo) {
+    const classObj = new ScheduleInfo(scheduleInfo);
     const scheduleData = classObj.scheduleData;
     const hostData = classObj.hostData;
-
     return (
       <div className="area-sub">
         <div className="inner">

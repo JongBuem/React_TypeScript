@@ -16,6 +16,9 @@ import {
   GetHostReturnType,
   GetVmParameter,
   GetVmReturnType,
+  HostList,
+  VmList,
+  DataList,
 } from "./types";
 
 export function GetHost({
@@ -57,12 +60,51 @@ export function GetVm({
   };
 }
 
+const convertHostListToDataList = (hostLists: HostList[][]): DataList[][] => {
+  return hostLists.map((hostGroup) =>
+    hostGroup.map((host) => ({
+      id: host.id,
+      name: host.name,
+      sku: host.sku,
+      statuses: host.statuses,
+      virtualMachines: host.virtualMachines.map((vm) => ({
+        id: vm.id,
+        location: "", // 필요한 경우 데이터를 채워넣습니다.
+        name: vm.name,
+        statuses: vm.statuses,
+      })),
+    }))
+  );
+};
+
+export const getDataList = (host: HostList[], vm: VmList[]) => {
+  const parentArray: HostList[] = host;
+  const childArray: VmList[] = vm;
+  const monitoringData = new MonitoringData(parentArray, childArray);
+  const division = true; // 2D 배열로 분리할지 여부
+
+  // MonitoringData 결과 가져오기
+  const monitoringResult = monitoringData.init(
+    parentArray,
+    childArray,
+    division
+  );
+
+  // 변환: HostList[][] -> DataList[][]
+  const formattedData: DataList[][] = Array.isArray(monitoringResult)
+    ? convertHostListToDataList(monitoringResult as HostList[][])
+    : [];
+
+  // 상태 업데이트
+  return formattedData;
+};
+
 export default function Monitoring() {
   const { customer } = customerStore();
   const [subscriptionId, setSubscriptionId] = React.useState(
     customer?.subscriptions?.items[0]?.id ?? ""
   );
-  const [dataList, setDataList] = React.useState([]);
+  const [dataList, setDataList] = React.useState<DataList[][]>([]);
   const { host, setHost } = monitoringHostStore();
   const { vm, setVm } = monitoringVmStore();
   const { data: hostList, isLoading: hostListLoading } = GetHost({
@@ -80,19 +122,27 @@ export default function Monitoring() {
   //   return dataInstance.init(dataInstance.host, dataInstance.vm, true);
   // });
 
-  const DataList = React.useCallback(() => {
-    const dataInstance = new MonitoringData(host, vm);
-    const dataList = dataInstance.init(
-      dataInstance.host,
-      dataInstance.vm,
-      true
-    );
-    return dataList;
-  }, [host, vm]);
+  // const DataList = React.useCallback(() => {
+  //   const dataInstance = new MonitoringData(host, vm);
+  //   const dataList = dataInstance.init(
+  //     dataInstance.host,
+  //     dataInstance.vm,
+  //     true
+  //   );
+  //   return dataList;
+  // }, [host, vm]);
 
   const GetHostList = async (result: SWRResponse) => {
     const dataArray: any = result.data ? result : { data: result };
-    const hostInstance = new MonitoringHostDATA(dataArray);
+    const datas = dataArray.data;
+    const newHosts = datas.newHosts.filter((v: any) => null !== v);
+    const oldHosts = datas.oldHosts.filter((v: any) => null !== v);
+    const hostInstance = new MonitoringHostDATA({
+      data: {
+        newHosts,
+        oldHosts,
+      },
+    });
     const hostlist = hostInstance.init(hostInstance.host);
     setHost(hostlist);
   };
@@ -105,7 +155,7 @@ export default function Monitoring() {
   };
 
   React.useEffect(() => {
-    setDataList(DataList());
+    setDataList(getDataList(host, vm));
   }, [host, vm]);
 
   React.useEffect(() => {

@@ -5,14 +5,13 @@ import LeftContents from "./components/LeftContents";
 import { useAxiosSwr, getAPI, postAPI, patchAPI } from "common/api/CmwApi";
 import {
   ScheduleData,
-  GetScheduleInfoData,
   GetScheduleLogParameter,
   GetScheduleLogType,
 } from "./types";
 
 export async function GetScheduleInfo(
   scheduleId: string
-): Promise<GetScheduleInfoData> {
+): Promise<ScheduleData> {
   return await getAPI(`/schedule/${scheduleId}`)
     .then(({ data }) => {
       return {

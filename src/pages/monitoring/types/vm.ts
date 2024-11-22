@@ -81,7 +81,7 @@ export interface Resources {
   properties: { [key: string]: any };
 }
 
-export interface MonitoringData {
+export interface Monitoring {
   _id: string;
   name: string;
   id: string;
@@ -198,3 +198,10 @@ export type GetVmReturnType = {
   isError: any;
   isValidating: boolean;
 };
+
+export interface VmList {
+  id: string;
+  location: string;
+  name: string;
+  statuses: string;
+}

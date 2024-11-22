@@ -51,3 +51,11 @@ export interface HostDataMonitoringData {
   location: string;
   statuses: string;
 }
+
+export interface ScheduleHostData {
+  id: string;
+  location: string;
+  name: string;
+  sku: string;
+  statuses: string;
+}

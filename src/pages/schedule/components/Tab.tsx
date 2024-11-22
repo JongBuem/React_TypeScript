@@ -58,7 +58,7 @@ export const TabPanel = ({ children, value, index }: TabPanelProps) => {
   );
 };
 
-export const CustomTab = ({ id, scheduleData }: CustomTabProps) => {
+export const CustomTab = ({ id, scheduleData, hostData }: CustomTabProps) => {
   const [value, setValue] = React.useState<number>(0); //tab 위치
   const tabhandleChange = (e: React.SyntheticEvent, index: number) => {
     setValue(index); //tab 위치 변경

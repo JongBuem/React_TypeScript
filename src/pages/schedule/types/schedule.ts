@@ -18,16 +18,12 @@ export interface ScheduleData {
   createdAt: string;
   updatedAt: string;
   updateUser: string;
-  host: any;
+  host: HostData[];
 }
 
 export interface ScheduleAllData {
   host: HostData;
   schedule: ScheduleData;
-}
-
-export interface GetScheduleInfoData extends ScheduleData {
-  host: HostData;
 }
 
 export type GetScheduleLogParameter = {
