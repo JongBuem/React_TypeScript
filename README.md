@@ -1,5 +1,65 @@
 # React_TypeScript
 
+- 11월 26일
+
+  - 진행 파일: pages/schedule/components/Item.tsx, pages/error, common/utils, auth/acquireTokenSilent.ts, auth/fetch.ts
+  - 드디어 길고긴 Item.tsx의 ts변환이 완료 되었다.
+  - 이번에 느낀점은 비슷한 컴포넌트끼리 한파일안에 많이 모아두는 것은 좋지 않다는 걸 느꼈다.
+  - 왜냐하면 하나의 오류로 인해 전체파일에 영향을 주기도 하고, 수정하는데 코드수가 길어지니까 찾는데 더오래 걸렸었다.
+  - as(타입 단언): TypeScript에게 **"내가 이 값의 타입을 더 잘 알고 있으니, 지정한 타입으로 간주하라"**고 지시한다. TypeScript가 타입 추론을 통해 얻은 타입을 무시하거나, 더 구체적인 타입으로 변경하고 싶을 때 사용하는 것 같다. 나는 as를 보통 DOM 조작에서 많이 사용했었다.
+    - 주요 특징
+      - 컴파일 타임에만 영향을 준다. 런타임 시에는 아무런 영향을 주지 않는다.
+      - 안전성을 보장하지 않는다. 잘못된 단언은 런타임 오류로 이어질 수 있기때문이다.
+  - is(타입 가드): is는 **"이 값이 특정 타입임을 런타임에서 확인"**할 때 사용한다. 함수 반환 타입에 value is Type를 선언하면, TypeScript는 이 함수가 true를 반환할 경우 해당 값이 해당 타입이라고 추론한다. 아직 이해하고 사용해본적은 없지만 여러 타입을 좁히는데 사용하면 좋을 것 같다. - 주요 특징 - 런타임에 실제로 타입을 확인하는 역할을 한다. - 안전성을 보장합니다. true를 반환할 때만 타입이 좁혀지므로, 타입 안전성을 유지할 수 있다.
+    |특징|as (타입 단언)|is (타입 가드)|
+    |------|---|---|
+    |주요 목적|개발자가 특정 타입으로 간주하도록 강제|런타임에서 특정 타입 여부를 확인|
+    |안전성|컴파일 타임에만 적용, 잘못 사용 시 런타임 에러 발생 가능|타입 확인 결과에 따라 안전한 타입 좁히기 제공|
+    |런타임 동작|런타임에서는 아무런 동작을 하지 않음|런타임에 실제로 타입 체크가 발생|
+    |사용 사례|DOM 요소 타입 단언, API 응답 타입 강제 지정|배열 필터링, 조건문 내부에서 타입 좁히기|
+
+```typeScript
+//as의 예시
+let value: unknown = "hello";
+
+//TypeScript는 `value`의 타입을 `unknown`으로 간주하지만, 우리가 이 값을 `string`으로 사용한다고 단언.
+let str = value as string;
+console.log(str.length); // 정상 동작
+```
+
+```typeScript
+//잘못된 as의 예시
+//타입 강제 지정에 사용하여 컴파일러의 타입 오류를 무시하지만, 런타임에서 오류가 발생할 수 있다.
+let num = "123" as number; // 컴파일 에러 없음
+console.log(num + 1);      // 런타임에서 오류 발생
+```
+
+```typeScript
+//is의 예시
+type User = { name: string };
+type Admin = { name: string; privileges: string[] };
+
+function isAdmin(user: User | Admin): user is Admin {
+  return (user as Admin).privileges !== undefined;
+}
+
+const person: User | Admin = { name: "Alice", privileges: ["create-server"] };
+
+if (isAdmin(person)) {
+  console.log(person.privileges); // `person`이 `Admin` 타입으로 좁혀짐
+}
+```
+
+```typeScript
+//배열에서 is의 예시
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+const mixedArray: (string | number)[] = [1, "hello", 2, "world"];
+const stringArray = mixedArray.filter(isString); // string[]
+```
+
 - 11월 22일
 
   - 진행 파일: class/monitoring.ts, class/schedule.ts, class/log.ts

@@ -870,8 +870,11 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
       else return false;
     };
 
+    //resourceId값이여야 하는데 중복되지 않는 필수 값의 정의가되어있지 않음
+    const requireFild = (v: LogData) => v._id;
+
     const findObj = (array: LogData[], value: string) => {
-      const result = array.find((v) => v.resourceId === value) ?? undefined;
+      const result = array.find((v) => requireFild(v) === value) ?? undefined;
       return result;
     };
 
@@ -879,20 +882,23 @@ export const ScheduleHostLog = React.memo(function ScheduleHostLog({
       const scheduleHostLogs: LogData[] = scheduleHostLog;
       const array = scheduleHostLogs.filter((v) => jobCountCheck(v as LogData));
       const resourceIds: string[] = array
-        .map((v) => v.resourceId)
-        .filter((v) => v);
+        .map((v) => requireFild(v))
+        .filter((v) => v !== undefined);
 
-      // const uniqueResourceIds = [...new Set(resourceIds)];
-      // const result = uniqueResourceIds?.map((v) => findObj(array, v)).filter((v) => v);
-      // const hostLogInstance = new ScheduleHostLogDATA(result);
-      // const hostLoglist = hostLogInstance.init(hostLogInstance.data);
-      // const hostLoglists: ViewLogData[] = hostLoglist;
-      // const sortlist = hostLoglists.sort((a, b) =>
-      //   a[LogConstant.LOG_HOST_KEY_OLDNAME].localeCompare(
-      //     b[LogConstant.LOG_HOST_KEY_OLDNAME]
-      //   )
-      // );
-      // setLog(sortlist);
+      const uniqueResourceIds = [...new Set(resourceIds)];
+      const result = uniqueResourceIds
+        ?.map((v) => findObj(array, v))
+        .filter((v): v is LogData => v !== undefined);
+
+      const hostLogInstance = new ScheduleHostLogDATA(result);
+      const hostLoglist = hostLogInstance.init(hostLogInstance.data);
+      const hostLoglists: ViewLogData[] = hostLoglist;
+      const sortlist = hostLoglists.sort((a, b) =>
+        a[LogConstant.LOG_HOST_KEY_OLDNAME].localeCompare(
+          b[LogConstant.LOG_HOST_KEY_OLDNAME]
+        )
+      );
+      setLog(sortlist);
     }
   }, [scheduleHostLog, jobCount]);
 

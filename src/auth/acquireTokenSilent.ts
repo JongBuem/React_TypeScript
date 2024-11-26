@@ -37,7 +37,7 @@ export const RefreshAccessToken = async () => {
                 setCookie("CMVERIFY", "verification", response.expiresOn);
                 return response.accessToken;
               })
-              .catch(() => Window.location.reload(true));
+              .catch(() => window.location.reload());
           }
         }
       });

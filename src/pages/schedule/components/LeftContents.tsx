@@ -50,6 +50,7 @@ function LeftContents() {
 
                     return (
                       <li
+                        key={_id}
                         style={{ padding: 0 }}
                         className={clsx({
                           selected: Selected(_id),
