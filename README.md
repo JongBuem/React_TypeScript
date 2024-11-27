@@ -1,5 +1,91 @@
 # React_TypeScript
 
+- 11월 28일
+  - 진행 파일:
+  - @@
+
+```typeScript
+//ContentsHead 컴포넌트의 인터페이스
+export interface ContentsHeadIF {
+  hostList: HostList[];
+  vmList: VmList[];
+  subscriptionId: string;
+  subscriptionIds: SubscriptionIds[];
+  onChange: (value: string) => void; // props의 타입을 명시적으로 정의하여 자식 컴포넌트에서 부모로 전달하는 함수의 인자와 반환 타입
+}
+```
+
+```typeScript
+//Omit으로 ContentsHeadIF의 인터페이스에서 hostList, vmList 속성을 제외한 새로운 타입을 생성
+export interface ContentsHeadIF {
+  hostList: HostList[];
+  vmList: VmList[];
+  subscriptionId: string;
+  subscriptionIds: SubscriptionIds[];
+  onChange: (value: string) => void;
+}
+
+
+export interface MonitoringSubscriptionInputIF
+  extends Omit<ContentsHeadIF, "hostList" | "vmList"> {}
+```
+
+- 11월 27일
+
+  - 진행 파일: pages/monitoring/index.tsx, ContentsBody.tsx, ContentsBodyItems.tsx, ContentsHead.tsx, styled.tsx
+  - 기존 coomponents폴더에서 관리되는 monitoring컴포넌트를 page내 도메인 coomponents폴더로 이동 및 수정
+  - 그리고 어제 작성했던 is(타입 가드)를 사용해야 하는 경우가 생겼다.
+  - 결과값이 조건에 따라 타입 및 인터페이스가 변경되서 타입을 학인하는 로직이 필요했다.
+
+```typeScript
+//ContentsHead.tsx
+function isHost(
+  result: MonitoringStatusHost | MonitoringStatusVm | MonitoringStatusHostVm
+): result is MonitoringStatusHost {
+  return (
+    (result as MonitoringStatusHost)[
+      MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE //"Host available"
+    ] !== undefined
+  );
+}
+
+function isVm(
+  result: MonitoringStatusHost | MonitoringStatusVm | MonitoringStatusHostVm
+): result is MonitoringStatusVm {
+  return (
+    (result as MonitoringStatusVm)[
+      MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING //"VM running"
+    ] !== undefined
+  );
+}
+
+ React.useEffect(() => {
+    const hostStatusInstance = new MonitoringStatus(
+      hostList,
+      MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_KEY
+    );
+    const result = hostStatusInstance.init(hostList, hostStatusInstance.type);
+    if (isHost(result)) //result의 obj의 필드중 Host available이 존재하는 경우
+      setHostCount(
+        result[
+          MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE
+        ]
+      );
+  }, [hostList]);
+
+  React.useEffect(() => {
+    const VmStatusInstance = new MonitoringStatus(
+      vmList,
+      MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY
+    );
+    const result = VmStatusInstance.init(vmList, VmStatusInstance.type);
+    if (isVm(result)) //result의 obj의 필드중 VM running이 존재하는 경우
+      setVmCount(
+        result[MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING]
+      );
+  }, [vmList]);
+```
+
 - 11월 26일
 
   - 진행 파일: pages/schedule/components/Item.tsx, pages/error, common/utils, auth/acquireTokenSilent.ts, auth/fetch.ts

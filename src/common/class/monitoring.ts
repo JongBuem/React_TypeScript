@@ -253,10 +253,13 @@ export class MonitoringData {
 }
 
 export class MonitoringStatus {
-  public list: HostData[] | Monitoring[];
+  public list: HostData[] | Monitoring[] | HostList[] | VmList[];
   public type: string;
 
-  constructor(list: HostData[] | Monitoring[], type: string) {
+  constructor(
+    list: HostData[] | Monitoring[] | HostList[] | VmList[],
+    type: string
+  ) {
     this.list = Array.isArray(list) ? list : [];
     this.type = type;
   }

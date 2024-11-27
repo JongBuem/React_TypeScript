@@ -1,10 +1,36 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { MonitoringStatus } from "common/class/monitoring";
 import {
   MonitoringHostStatusesConstant,
   MonitoringVMStatusesConstant,
 } from "common/constants";
+import {
+  MonitoringStatusHost,
+  MonitoringStatusVm,
+  MonitoringStatusHostVm,
+  ContentsHeadIF,
+  MonitoringSubscriptionInputIF,
+} from "../types";
+
+function isHost(
+  result: MonitoringStatusHost | MonitoringStatusVm | MonitoringStatusHostVm
+): result is MonitoringStatusHost {
+  return (
+    (result as MonitoringStatusHost)[
+      MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE
+    ] !== undefined
+  );
+}
+
+function isVm(
+  result: MonitoringStatusHost | MonitoringStatusVm | MonitoringStatusHostVm
+): result is MonitoringStatusVm {
+  return (
+    (result as MonitoringStatusVm)[
+      MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING
+    ] !== undefined
+  );
+}
 
 export default function ContentsHead({
   hostList,
@@ -12,7 +38,7 @@ export default function ContentsHead({
   subscriptionId,
   subscriptionIds,
   onChange,
-}) {
+}: ContentsHeadIF) {
   const [hostCount, setHostCount] = React.useState(0);
   const [vmCount, setVmCount] = React.useState(0);
 
@@ -21,13 +47,13 @@ export default function ContentsHead({
       hostList,
       MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_KEY
     );
-    const result = hostStatusInstance.init(
-      hostStatusInstance.list,
-      hostStatusInstance.type
-    );
-    setHostCount(
-      result[MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE]
-    );
+    const result = hostStatusInstance.init(hostList, hostStatusInstance.type);
+    if (isHost(result))
+      setHostCount(
+        result[
+          MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_AVAILABLE
+        ]
+      );
   }, [hostList]);
 
   React.useEffect(() => {
@@ -35,13 +61,11 @@ export default function ContentsHead({
       vmList,
       MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY
     );
-    const result = VmStatusInstance.init(
-      VmStatusInstance.list,
-      VmStatusInstance.type
-    );
-    setVmCount(
-      result[MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING]
-    );
+    const result = VmStatusInstance.init(vmList, VmStatusInstance.type);
+    if (isVm(result))
+      setVmCount(
+        result[MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING]
+      );
   }, [vmList]);
 
   return (
@@ -89,17 +113,22 @@ export const MonitoringSubscriptionInput = React.memo(
     subscriptionId,
     subscriptionIds,
     onChange,
-  }) {
+  }: MonitoringSubscriptionInputIF) {
     const [select, setSelect] = React.useState(subscriptionId);
 
-    const SelectHandleChange = React.useCallback((e) => {
-      setSelect(e.target.value);
-      onChange(e.target.value);
-    }, []);
+    const SelectHandleChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelect(e.target.value);
+        onChange(e.target.value);
+      },
+      []
+    );
 
     //초기화
     React.useEffect(() => {
-      SelectHandleChange({ target: { value: subscriptionId } });
+      SelectHandleChange({
+        target: { value: subscriptionId },
+      } as React.ChangeEvent<HTMLSelectElement>);
     }, [subscriptionId]);
 
     return (
@@ -127,17 +156,3 @@ export const MonitoringSubscriptionInput = React.memo(
     );
   }
 );
-
-ContentsHead.propTypes = {
-  hostList: PropTypes.array,
-  vmList: PropTypes.array,
-  subscriptionId: PropTypes.string,
-  subscriptionIds: PropTypes.array,
-  onChange: PropTypes.func,
-};
-
-MonitoringSubscriptionInput.propTypes = {
-  subscriptionId: PropTypes.string,
-  subscriptionIds: PropTypes.array,
-  onChange: PropTypes.func,
-};

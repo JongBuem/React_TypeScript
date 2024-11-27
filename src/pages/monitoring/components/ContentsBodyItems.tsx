@@ -8,9 +8,16 @@ import {
   MonitoringVMConstant,
   MonitoringVMStatusesConstant,
 } from "common/constants";
-import PropTypes from "prop-types";
+import {
+  VmList,
+  ItemsIF,
+  VirtualMachinesIF,
+  MonitoringStatusHost,
+  MonitoringStatusVm,
+  MonitoringStatusHostVm,
+} from "../types";
 
-function Division(array, n) {
+function Division(array: VmList[], n: number): VmList[][] {
   let arr = array;
   let len = arr.length;
   let cnt = Math.floor(len / n) + (Math.floor(len % n) > 0 ? 1 : 0);
@@ -21,19 +28,27 @@ function Division(array, n) {
   return temp;
 }
 
-const Count = (vm) => {
+function isVm(
+  result: MonitoringStatusHost | MonitoringStatusVm | MonitoringStatusHostVm
+): result is MonitoringStatusVm {
+  return (
+    (result as MonitoringStatusVm)[
+      MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING
+    ] !== undefined
+  );
+}
+
+const Count = (vm: VmList[]) => {
   const VmStatusInstance = new MonitoringStatus(
     vm,
     MonitoringVMStatusesConstant.MONITORING_vm_STATUSES_KEY
   );
-  const result = VmStatusInstance.init(
-    VmStatusInstance.list,
-    VmStatusInstance.type
-  );
-  return result[MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING];
+  const result = VmStatusInstance.init(vm, VmStatusInstance.type);
+  if (isVm(result))
+    return result[MonitoringVMStatusesConstant.MONITORING_VM_STATUSES_RUNNING];
 };
 
-function Color(key, status) {
+function Color(key: string, status: string) {
   if (key === MonitoringHostStatusesConstant.MONITORING_HOST_STATUSES_KEY) {
     if (
       status ===
@@ -64,7 +79,7 @@ function Color(key, status) {
   } else return { backgroundColor: "#EEEFF2" };
 }
 
-function VirtualMachines({ vmName, vmLocation, vmStatuse }) {
+function VirtualMachines({ vmName, vmLocation, vmStatuse }: VirtualMachinesIF) {
   return (
     <li>
       <div className="tooltip">
@@ -98,10 +113,9 @@ export const Items = React.memo(function Items({
   skuName = "",
   hostStatus = "",
   vm,
-}) {
+}: ItemsIF) {
   const [open, setOPen] = React.useState(false);
-  const vmList = JSON.parse(vm);
-  // const [virtualMachines] = React.useState(JSON.parse(vm));
+  const vmList: VmList[] = JSON.parse(vm);
 
   return (
     <div className="st-item" style={{ minHeight: "110px" }}>
@@ -264,16 +278,3 @@ export function ItemsLoading() {
     </div>
   );
 }
-
-VirtualMachines.propTypes = {
-  vmName: PropTypes.string,
-  vmLocation: PropTypes.string,
-  vmStatuse: PropTypes.string,
-};
-
-Items.propTypes = {
-  hostName: PropTypes.string,
-  skuName: PropTypes.string,
-  hostStatus: PropTypes.string,
-  vm: PropTypes.any,
-};
