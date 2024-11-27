@@ -1,17 +1,28 @@
 import React from "react";
 import { Items, ItemsLoading } from "./ContentsBodyItems";
 import { MonitoringHostConstant } from "common/constants";
-import PropTypes from "prop-types";
+import { DataList } from "../types";
 
-function ContentsBody({ dataList, hostListLoading, vmListLoading }) {
-  const data = JSON.parse(dataList);
+export interface ContentsBodyIF {
+  dataList: string;
+  hostListLoading: boolean;
+  vmListLoading: boolean;
+}
+
+function ContentsBody({
+  dataList,
+  hostListLoading,
+  vmListLoading,
+}: ContentsBodyIF) {
+  const data: DataList[][] = JSON.parse(dataList);
+
   return (
     <div className="contents-body">
       <div className="inner">
         <div className="inner-item">
           {hostListLoading === true &&
           vmListLoading === true &&
-          data.length == 0
+          data.length === 0
             ? [1, 2, 3, 4, 5].map((v, i) => <ItemsLoading key={i} />)
             : Array.isArray(data[0]) &&
               data[0]?.map((v, i) => (
@@ -33,7 +44,7 @@ function ContentsBody({ dataList, hostListLoading, vmListLoading }) {
         <div className="inner-item">
           {hostListLoading === true &&
           vmListLoading === true &&
-          data.length == 0
+          data.length === 0
             ? [1, 2, 3, 4, 5].map((v, i) => <ItemsLoading key={i} />)
             : Array.isArray(data[1]) &&
               data[1]?.map((v, i) => (
@@ -58,9 +69,4 @@ function ContentsBody({ dataList, hostListLoading, vmListLoading }) {
   );
 }
 
-ContentsBody.propTypes = {
-  dataList: PropTypes.any,
-  hostListLoading: PropTypes.bool,
-  vmListLoading: PropTypes.bool,
-};
 export default React.memo(ContentsBody);

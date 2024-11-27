@@ -1,7 +1,7 @@
 //CMW MAin home
 import React from "react";
-import ContentsHead from "components/monitoring/ContentsHead";
-import ContentsBody from "components/monitoring/ContentsBody";
+import ContentsHead from "pages/monitoring/components/ContentsHead";
+import ContentsBody from "pages/monitoring/components/ContentsBody";
 import {
   MonitoringHostDATA,
   MonitoringVmDATA,
