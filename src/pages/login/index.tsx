@@ -1,18 +1,17 @@
-import React from 'react';
-import { useMsal } from '@azure/msal-react';
-import { loginRequest } from '../../auth/authConfig';
-import logo from 'assets/images/logo_login.png';
+import React from "react";
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from "../../auth/authConfig";
+import logo from "assets/images/logo_login.png";
 
 export default function Login() {
   const { instance } = useMsal();
   const SignUp = () => {
-    // instance.loginRedirect(loginRequest);
     const promiseResult = Promise.resolve(instance.loginPopup(loginRequest));
     promiseResult.catch((err) => console.log(err));
   };
 
   return (
-    <div id="login-wrapper" style={{ height: '100vh' }}>
+    <div id="login-wrapper" style={{ height: "100vh" }}>
       <div className="login-bg">
         <div className="waves-wrap">
           <svg
