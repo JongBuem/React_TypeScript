@@ -1,10 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Footer from 'components/layout/Footer';
-import Children from 'components/layout//Children';
-// import { Outlet } from 'react-router-dom';
+import React from "react";
+import Footer from "components/layout/Footer";
+import Children from "components/layout/Children";
 
-function Layout(props) {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div id="container">
       <div id="contents">
@@ -53,14 +55,11 @@ function Layout(props) {
             </svg>
           </div>
         </div>
-        <Children props={props.children} />
+        <Children>{children}</Children>
         <Footer />
       </div>
     </div>
   );
-}
-
-Layout.propTypes = {
-  children: PropTypes.object,
 };
+
 export default React.memo(Layout);

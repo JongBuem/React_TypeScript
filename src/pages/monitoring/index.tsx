@@ -144,14 +144,14 @@ export default function Monitoring() {
       },
     });
     const hostlist = hostInstance.init(hostInstance.host);
-    setHost(hostlist);
+    setHost(hostlist as HostList[]);
   };
 
   const GetVmList = async (result: SWRResponse) => {
     const dataArray: any = result.data ? result : { data: result };
     const vmInstance = new MonitoringVmDATA(dataArray);
     const vmlist = vmInstance.init(vmInstance.data);
-    setVm(vmlist);
+    setVm(vmlist as VmList[]);
   };
 
   React.useEffect(() => {
