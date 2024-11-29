@@ -1,16 +1,20 @@
 import React from "react";
 import clsx from "clsx";
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { scheduleListStore } from "global/schedule";
 import { ScheduleConstant } from "common/constants";
 import { GetSchedule } from "pages/schedule";
 import { customerStore } from "global/customer";
 
+interface ScheduleTopLinkIF {
+  setPath: React.Dispatch<React.SetStateAction<string>>;
+  SelectedStyle: (url: string) => boolean;
+}
+
 export const ScheduleTopLink = React.memo(function ScheduleTopLink({
   setPath,
   SelectedStyle,
-}) {
+}: ScheduleTopLinkIF) {
   const { customer } = customerStore();
   const { scheduleList, setScheduleList } = scheduleListStore();
   const scheduleURL =
@@ -40,8 +44,3 @@ export const ScheduleTopLink = React.memo(function ScheduleTopLink({
     </>
   );
 });
-
-ScheduleTopLink.propTypes = {
-  setPath: PropTypes.any,
-  SelectedStyle: PropTypes.any,
-};

@@ -1,44 +1,43 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import { Pagination, PaginationItem } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import React from "react";
+import { styled } from "@mui/material/styles";
+import { Pagination, PaginationItem } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export const PaginationCustom = styled(Pagination)(() => ({
-  '&.MuiPagination-root .MuiPagination-ul': {
-    paddingTop: '15px',
-    border: 'none',
+  "&.MuiPagination-root .MuiPagination-ul": {
+    paddingTop: "15px",
+    border: "none",
   },
-  '&.MuiPagination-root .MuiPagination-ul li': {
+  "&.MuiPagination-root .MuiPagination-ul li": {
     // borderTop: '1px solid #eaeaea',
     // borderLeft: '1px solid #eaeaea',
     // borderBottom: '1px solid #eaeaea',
     // width: '40px',
     // height: '40px',
-    border: 'none',
+    border: "none",
   },
-  '&.MuiPagination-root .MuiPagination-ul .MuiButtonBase-root': {
+  "&.MuiPagination-root .MuiPagination-ul .MuiButtonBase-root": {
     padding: 10,
-    color: '#172b4d',
+    color: "#172b4d",
     margin: 0,
-    border: 'none',
-    fontSize: '15px',
-    width: '36px',
-    height: '36px',
-    borderRadius: '10px',
+    border: "none",
+    fontSize: "15px",
+    width: "36px",
+    height: "36px",
+    borderRadius: "10px",
   },
-  '&.MuiPagination-root .MuiPagination-ul .MuiButtonBase-root.Mui-selected': {
-    background: '#eee',
-    color: '#642977',
-    fontWeight: 'bold',
-    borderRadius: '10px',
+  "&.MuiPagination-root .MuiPagination-ul .MuiButtonBase-root.Mui-selected": {
+    background: "#eee",
+    color: "#642977",
+    fontWeight: "bold",
+    borderRadius: "10px",
     padding: 0,
     margin: 0,
   },
 }));
 
-export const usePagination = (data, itemsPerPage) => {
+export const usePagination = (data: any[], itemsPerPage: number) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const maxPage = Math.ceil(data.length / itemsPerPage);
 
@@ -56,7 +55,7 @@ export const usePagination = (data, itemsPerPage) => {
     setCurrentPage((currentPage) => Math.max(currentPage - 1, 1));
   }
 
-  function jump(page) {
+  function jump(page: number) {
     const pageNumber = Math.max(1, page);
     setCurrentPage((currentPage) => Math.min(pageNumber, maxPage));
   }
@@ -64,12 +63,18 @@ export const usePagination = (data, itemsPerPage) => {
   return { next, prev, jump, currentData, currentPage, maxPage };
 };
 
-export default function Paging({ page, count, handleChange }) {
+export interface PagingIF {
+  page: number;
+  count: number;
+  handleChange: (e: React.ChangeEvent<unknown>, p: number) => void;
+}
+
+export default function Paging({ page, count, handleChange }: PagingIF) {
   return (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'center',
+        display: "flex",
+        justifyContent: "center",
       }}
     >
       <PaginationCustom
@@ -83,7 +88,6 @@ export default function Paging({ page, count, handleChange }) {
               next: ArrowForwardIcon,
             }}
             {...props2}
-            disableRipple
           />
         )}
         onChange={(e, p) => handleChange(e, p)}
@@ -91,9 +95,3 @@ export default function Paging({ page, count, handleChange }) {
     </div>
   );
 }
-Paging.propTypes = {
-  page: PropTypes.any,
-  count: PropTypes.any,
-  handleChange: PropTypes.any,
-  title: PropTypes.string,
-};

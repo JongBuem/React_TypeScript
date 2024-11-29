@@ -17,20 +17,20 @@ function Topmenu() {
   const { instance } = useMsal();
   const { adProfile } = adProfileStore();
   const [path, setPath] = React.useState(window.location.pathname);
-  const [lang, setLan] = React.useState(
-    localStorage.getItem("cmwLng") ? localStorage.getItem("cmwLng") : "ko"
-  );
+  // const [lang, setLan] = React.useState(
+  //   localStorage.getItem("cmwLng") ? localStorage.getItem("cmwLng") : "ko"
+  // );
 
-  const handleChange = (event) => {
-    // setLan(event.target.value);
-    setLan("en");
-  };
+  // const handleChange = (event) => {
+  //   // setLan(event.target.value);
+  //   setLan("en");
+  // };
 
-  const SelectedStyle = React.useCallback((url) => {
+  const SelectedStyle = React.useCallback((url: string) => {
     if (path === url) return true;
     else if ("/" + path.split("/")[1] === "/" + url.split("/")[1]) return true;
     else return false;
-  });
+  }, []);
 
   const Logout = React.useCallback(() => {
     instance.logoutPopup({
@@ -38,7 +38,7 @@ function Topmenu() {
       // mainWindowRedirectUri: "/",
     });
     sessionStorage.clear();
-  });
+  }, []);
 
   return (
     <div id="wrapper" data-simplebar style={{ display: "block" }}>
