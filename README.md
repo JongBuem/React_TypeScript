@@ -1,28 +1,22 @@
 # React_TypeScript
 
-- 11월 28일
-  - 진행 파일:
-  - @@
+- 11월 29일
+  - 진행 파일: ContentsHead.tsx, global/_, components/_
+  - ContentsHeadIF은 Host와 Vm의 사용중인 갯수와 그에 해당하는 구독에대한 선택자가 존재한다.
+  - MonitoringSubscriptionInputIF은 ContentsHeadIF의 자식컴포넌트로 선택자에 해당한다.
+  - Omit을 사용한 이유는 부모에서 사용중인 동일한 데이터중 Host와 Vm를 제외한 나머지 데이터를 동일하게 필요로한다.
+  - 새로운 인터페이스를 생성 할 수 있었지만, 부모자식간의 연관성을 쉽게 확인할 수 있고 중복된 interface를 만들필요가 없다고 느꼈다.
+  - 또한, 부모컴포넌트에서 상속받는 값이 수정된다면 자식 컴포넌트의 인터페이스도 다시 수정해야하는 귀찮음이 컸다.
 
 ```typeScript
 //ContentsHead 컴포넌트의 인터페이스
-export interface ContentsHeadIF {
-  hostList: HostList[];
-  vmList: VmList[];
-  subscriptionId: string;
-  subscriptionIds: SubscriptionIds[];
-  onChange: (value: string) => void; // props의 타입을 명시적으로 정의하여 자식 컴포넌트에서 부모로 전달하는 함수의 인자와 반환 타입
-}
-```
-
-```typeScript
 //Omit으로 ContentsHeadIF의 인터페이스에서 hostList, vmList 속성을 제외한 새로운 타입을 생성
 export interface ContentsHeadIF {
   hostList: HostList[];
   vmList: VmList[];
   subscriptionId: string;
   subscriptionIds: SubscriptionIds[];
-  onChange: (value: string) => void;
+  onChange: (value: string) => void; // props의 타입을 명시적으로 정의하여 자식 컴포넌트에서 부모로 전달하는 함수의 인자와 반환 타입
 }
 
 
@@ -35,7 +29,7 @@ export interface MonitoringSubscriptionInputIF
   - 진행 파일: pages/monitoring/index.tsx, ContentsBody.tsx, ContentsBodyItems.tsx, ContentsHead.tsx, styled.tsx
   - 기존 coomponents폴더에서 관리되는 monitoring컴포넌트를 page내 도메인 coomponents폴더로 이동 및 수정
   - 그리고 어제 작성했던 is(타입 가드)를 사용해야 하는 경우가 생겼다.
-  - 결과값이 조건에 따라 타입 및 인터페이스가 변경되서 타입을 학인하는 로직이 필요했다.
+  - 결과값이 조건에따라 타입 및 인터페이스가 달라져서 조건별로 학인하는 분기처리가 필요했다.
 
 ```typeScript
 //ContentsHead.tsx
