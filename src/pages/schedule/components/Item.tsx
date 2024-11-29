@@ -101,7 +101,6 @@ export const ScheduleInformationStatusInput = React.memo(
       (e: React.ChangeEvent<HTMLSelectElement>) => {
         const elValue = e.target.value;
         setSelect(elValue);
-        setStatus(elValue);
       },
       [setSelect, setStatus]
     );
@@ -956,6 +955,7 @@ export const TabHostLogSelects = React.memo(function TabHostLogSelects({
   };
 
   const RoundSelectEventHandle = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.value);
     setJobCount(e.target.value);
   };
 
