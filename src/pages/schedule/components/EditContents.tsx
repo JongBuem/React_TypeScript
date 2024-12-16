@@ -6,7 +6,8 @@ import { customerStore } from "global/customer";
 import { scheduleListStore } from "global/schedule";
 import { adProfileStore } from "global/profile";
 import { GetSchedule, PatchSchedule } from "pages/schedule";
-import { TitleInput, ScheduleInformation, EditHostInformation } from "./Item";
+import { ScheduleInformation, EditHostInformation } from "./TapContents";
+import { TitleInput } from "./Item";
 import {
   loadingStore,
   titleStore,
@@ -101,10 +102,10 @@ function EditContents() {
   const { loading } = loadingStore();
   const { id } = useParams();
   const [scheduleInfoID, setScheduleInfoID] = React.useState<string | null>(
-    null
+    null,
   );
   const [scheduleInfo, setScheduleInfo] = React.useState<ScheduleData | null>(
-    null
+    null,
   );
 
   const init = React.useCallback(async (scheduleID: string) => {
