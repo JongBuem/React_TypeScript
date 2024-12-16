@@ -4,7 +4,8 @@ import { customerStore } from "global/customer";
 import { scheduleListStore } from "global/schedule";
 import { adProfileStore } from "global/profile";
 import { GetSchedule, PostSchedule } from "pages/schedule";
-import { TitleInput, ScheduleInformation, HostInformation } from "./Item";
+import { ScheduleInformation, HostInformation } from "./TapContents";
+import { TitleInput } from "./Item";
 import {
   loadingStore,
   titleStore,
